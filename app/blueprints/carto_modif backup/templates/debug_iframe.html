@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iframe de debug</title>
+    <script>
+        // Écouteur pour recevoir les messages de la page principale
+        window.addEventListener('message', function(event) {
+            const data = event.data;
+
+            if (data.action === 'customMessage') {
+                const display = document.getElementById('message-display');
+                display.textContent = `Message reçu : ${data.content}`;
+                console.log('Message reçu de la page principale :', data.content);
+                alert(`Communication avec l'iframe réussie ! Source : ${data.source}`);
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Iframe</h1>
+    <p id="message-display">Aucun message reçu pour l'instant.</p>
+</body>
+</html>
+{% endblock %}

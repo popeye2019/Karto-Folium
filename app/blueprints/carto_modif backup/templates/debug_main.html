@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page principale</title>
+    <script>
+        // Fonction pour envoyer un message à l'iframe
+        function sendMessageToIframe() {
+            const iframe = document.getElementById('debug-iframe');
+            const message = document.getElementById('message-input').value;
+
+            if (iframe && message) {
+                iframe.contentWindow.postMessage(
+                    { action: 'customMessage',
+                     content: message,
+                     source:'toto'
+                     },
+                     '*');
+                console.log('Message envoyé à l\'iframe :', message);
+            } else {
+                console.error('Aucun message ou iframe non trouvée.');
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Page principale</h1>
+    <label for="message-input">Message à envoyer :</label>
+    <input type="text" id="message-input" placeholder="Tapez votre message ici">
+    <button onclick="sendMessageToIframe()">Envoyer le message</button>
+
+    <h2>Iframe :</h2>
+    <iframe id="debug-iframe" src="/iframe" frameborder="0" style="width: 100%; height: 300px;"></iframe>
+</body>
+</html>

@@ -1,0 +1,423 @@
+[
+  {
+    "2017": 1037,
+    "2018": 1041,
+    "2019": 1060,
+    "COMMUNE": "Allassac",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.25700777036488,
+    "LONG_MAIRIE": 1.4756965634653532
+  },
+  {
+    "2017": 209,
+    "2018": 207,
+    "2019": 209,
+    "COMMUNE": "Ayen",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.24762443829845,
+    "LONG_MAIRIE": 1.3274797284350948
+  },
+  {
+    "2017": 154,
+    "2018": 154,
+    "2019": 155,
+    "COMMUNE": "Brignac-la-Plaine",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.188308012622244, 
+    "LONG_MAIRIE": 1.340128710523543
+  },
+  {
+    "2017": 17688,
+    "2018": 17828,
+    "2019": 18724,
+    "COMMUNE": "Brive-la-Gaillarde",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.15947550631548,
+    "LONG_MAIRIE": 1.5339542741660457
+  },
+  {
+    "2017": 65,
+    "2018": 66,
+    "2019": 67,
+    "COMMUNE": "Chabrignac",
+    "LAT_MAIRIE": 45.31545893283235,
+    "LONG_MAIRIE":  1.3394260227962405
+  },
+  {
+    "2017": 17,
+    "2018": 17,
+    "2019": 17,
+    "COMMUNE": "Chartrier-Ferrière",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.07087513877454,
+    "LONG_MAIRIE": 1.451643900476919
+  },
+  {
+    "2017": 174,
+    "2018": 171,
+    "2019": 198,
+    "COMMUNE": "Chasteaux",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.09263022519489,
+    "LONG_MAIRIE":  1.4679245689479954
+  },
+  {
+    "2017": 757,
+    "2018": 771,
+    "2019": 786,
+    "COMMUNE": "Cosnac",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.13457968174376,
+    "LONG_MAIRIE": 1.584643346673491
+  },
+  {
+    "2017": 565,
+    "2018": 572,
+    "2019": 573,
+    "COMMUNE": "Cublac",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.1438826846776, 
+    "LONG_MAIRIE": 1.3056821169161754
+  },
+  {
+    "2017": 183,
+    "2018": 195,
+    "2019": 204,
+    "COMMUNE": "Dampniat",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.16818833814665,
+    "LONG_MAIRIE":  1.6325569968875753
+  },
+  {
+    "2017": 894,
+    "2018": 903,
+    "2019": 913,
+    "COMMUNE": "Donzenac",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.22766981631104,
+    "LONG_MAIRIE":  1.5228259270494906
+  },
+  {
+    "2017": 11,
+    "2018": 11,
+    "2019": 12,
+    "COMMUNE": "Estivals",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.02780310034028,
+    "LONG_MAIRIE":  1.4612561780412234
+  },
+  {
+    "2017": 48,
+    "2018": 51,
+    "2019": 54,
+    "COMMUNE": "Estivaux",
+    "LAT_MAIRIE": 45.31467738943691,
+    "LONG_MAIRIE":  1.4849599402397076
+  },
+  {
+    "2017": 78,
+    "2018": 77,
+    "2019": 80,
+    "COMMUNE": "Jugeals-Nazareth",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.080797907615974,
+    "LONG_MAIRIE":  1.5593904745794036
+  },
+  {
+    "2017": 373,
+    "2018": 375,
+    "2019": 369,
+    "COMMUNE": "Juillac",
+    "LAT_MAIRIE": 45.317244020422216,
+    "LONG_MAIRIE": 1.3224110651433614
+  },
+  {
+    "2017": 147,
+    "2018": 150,
+    "2019": 153,
+    "COMMUNE": "Chapelle-aux-Brocs",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.14552099815749,
+    "LONG_MAIRIE":  1.6268962188120868
+  },
+  {
+    "2017": 0,
+    "2018": 0,
+    "2019": 0,
+    "COMMUNE": "Lascaux",
+    "LAT_MAIRIE": 45.339447508925936,
+    "LONG_MAIRIE":  1.3637493037453912
+  },
+  {
+    "2017": 0,
+    "2018": 0,
+    "2019": 0,
+    "COMMUNE": "Louignac",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.227075642481225,
+    "LONG_MAIRIE":  1.2795158097712565
+  },
+  {
+    "2017": 3497,
+    "2018": 3519,
+    "2019": 3541,
+    "COMMUNE": "Malemort",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.17013444083249,
+    "LONG_MAIRIE":  1.5640160202423594
+  },
+  {
+    "2017": 393,
+    "2018": 427,
+    "2019": 428,
+    "COMMUNE": "Mansac",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.169688663746726,
+    "LONG_MAIRIE":  1.3811811419217777
+  },
+  {
+    "2017": 73,
+    "2018": 83,
+    "2019": 84,
+    "COMMUNE": "Noailles",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.10156633651668,
+    "LONG_MAIRIE":  1.523995848270859
+  },
+  {
+    "2017": 1478,
+    "2018": 1502,
+    "2019": 1580,
+    "COMMUNE": "Objat",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.26409339496531,
+    "LONG_MAIRIE":  1.4094495107324583
+  },
+  {
+    "2017": 62,
+    "2018": 63,
+    "2019": 63,
+    "COMMUNE": "Perpezac-le-Blanc",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.22223893659036,
+    "LONG_MAIRIE":  1.3312861712687085
+  },
+  {
+    "2017": 0,
+    "2018": 0,
+    "2019": 0,
+    "COMMUNE": "Rosiers-de-Juillac",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.29122862963999,
+    "LONG_MAIRIE": 1.301385825099381
+  },
+  {
+    "2017": 67,
+    "2018": 65,
+    "2019": 64,
+    "COMMUNE": "Sadroc",
+    "LAT_MAIRIE": 45.28272887086181,
+    "LONG_MAIRIE": 1.5490966422804566
+  },
+  {
+    "2017": 215,
+    "2018": 217,
+    "2019": 215,
+    "COMMUNE": "Saint-Aulaire",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.23775817442859,
+    "LONG_MAIRIE": 1.384326531522521
+  },
+  {
+    "2017": 0,
+    "2018": 28,
+    "2019": 27,
+    "COMMUNE": "Saint-Bonnet-la-Rivière",
+    "LAT_MAIRIE": 45.29865187028832, 
+    "LONG_MAIRIE": 1.3708674141887034
+  },
+  {
+    "2017": 43,
+    "2018": 45,
+    "2019": 45,
+    "COMMUNE": "Saint-Bonnet-l'Enfantier",
+    "LAT_MAIRIE": 45.299612240328635, 
+    "LONG_MAIRIE": 1.5228779578550236
+  },
+  {
+    "2017": 25,
+    "2018": 25,
+    "2019": 24,
+    "COMMUNE": "Saint-Cyprien",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.25082040048447,
+    "LONG_MAIRIE": 1.3517137977626184
+  },
+  {
+    "2017": 89,
+    "2018": 91,
+    "2019": 92,
+    "COMMUNE": "Saint-Cyr-la-Roche",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.271553545146,
+    "LONG_MAIRIE":  1.3904725053438711
+  },
+  {
+    "2017": 1840,
+    "2018": 1840,
+    "2019": 1891,
+    "COMMUNE": "Saint-Pantaléon-de-Larche",
+    "LAT_MAIRIE": 45.14074894710567,
+    "LONG_MAIRIE": 1.446667115066195
+  },
+  {
+    "2017": 71,
+    "2018": 73,
+    "2019": 74,
+    "COMMUNE": "Saint-Pardoux-l'Ortigier",
+    "LAT_MAIRIE": 45.29852358337181,
+    "LONG_MAIRIE": 1.579220476150318
+  },
+  {
+    "2017": 175,
+    "2018": 175,
+    "2019": 173,
+    "COMMUNE": "Saint-Robert",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.25476503286388,
+    "LONG_MAIRIE": 1.2936445091773385
+  },
+  {
+    "2017": 454,
+    "2018": 458,
+    "2019": 475,
+    "COMMUNE": "Sainte-Féréole",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.22809400791186,
+    "LONG_MAIRIE": 1.5826855664886716
+  },
+  {
+    "2017": 29,
+    "2018": 29,
+    "2019": 29,
+    "COMMUNE": "Segonzac",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.27576191290554,
+    "LONG_MAIRIE": 1.2775086081826488
+  },
+  {
+    "2017": 28,
+    "2018": 27,
+    "2019": 29,
+    "COMMUNE": "Saint-Solve",
+    "LAT_MAIRIE": 45.30771795346761,
+    "LONG_MAIRIE":  1.4017332210692868
+  },
+  {
+    "2017": 502,
+    "2018": 529,
+    "2019": 543,
+    "COMMUNE": "Saint-Viance",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.21763291237863,
+    "LONG_MAIRIE": 1.45264550440077
+  },
+  {
+    "2017": 202,
+    "2018": 202,
+    "2019": 205,
+    "COMMUNE": "Turenne",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.053101534282696,
+    "LONG_MAIRIE":  1.5800405304210199
+  },
+  {
+    "2017": 790,
+    "2018": 835,
+    "2019": 875,
+    "COMMUNE": "Ussac",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.19112500279037,
+    "LONG_MAIRIE": 1.5083278893945926
+  },
+  {
+    "2017": 590,
+    "2018": 654,
+    "2019": 661,
+    "COMMUNE": "Varetz",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.193135443046934,
+    "LONG_MAIRIE": 1.4510434711074192
+  },
+  {
+    "2017": 126,
+    "2018": 126,
+    "2019": 125,
+    "COMMUNE": "Vars-sur-Roseix",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.25930060171178,
+    "LONG_MAIRIE": 1.3640951383721147
+  },
+  {
+    "2017": 148,
+    "2018": 148,
+    "2019": 149,
+    "COMMUNE": "Vignols",
+    "LAT_MAIRIE": 45.31919931017807,
+    "LONG_MAIRIE": 1.3894638978632432
+  },
+  {
+    "2017": 224,
+    "2018": 261,
+    "2019": 261,
+    "COMMUNE": "Voutezac",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.291613545703925,
+    "LONG_MAIRIE":  1.4363187733505582
+  },
+  {
+    "2017": 30,
+    "2018": 31,
+    "2019": 31,
+    "COMMUNE": "Yssandon",
+    "SYNDICAT": "Yssandonnais",
+    "LAT_MAIRIE": 45.21051086078992,
+    "LONG_MAIRIE": 1.3678741498386524
+  },
+  {
+    "2017": 643,
+    "2018": 653,
+    "2019": 670,
+    "COMMUNE": "Larche",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.12304613382105,
+    "LONG_MAIRIE": 1.4150246240545608
+  },
+  {
+    "2017": 272,
+    "2018": 273,
+    "2019": 280,
+    "COMMUNE": "Lissac-sur-Couze",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.10314409980143,
+    "LONG_MAIRIE": 1.4605653362062672
+  },
+  {
+    "2017": 36,
+    "2018": 37,
+    "2019": 37,
+    "COMMUNE": "Nespouls",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.04976760056032,
+    "LONG_MAIRIE": 1.5028635204254501
+  },
+  {
+    "2017": 242,
+    "2018": 244,
+    "2019": 250,
+    "COMMUNE": "Saint-Cernin-de-Larche",
+    "SYNDICAT": "Agglo de Brive",
+    "LAT_MAIRIE": 45.1028622112022,
+    "LONG_MAIRIE": 1.4139854452583203
+  }
+]

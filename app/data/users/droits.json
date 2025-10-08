@@ -1,0 +1,26 @@
+[
+    {
+        "Niveau": 1,
+        "Definition": "Base"
+    },
+    {
+        "Niveau": 2,
+        "Definition": "Suez"
+    },
+    {
+        "Niveau": 3,
+        "Definition": "Maintenance"
+    },
+    {
+        "Niveau": 4,
+        "Definition": "Animateur"
+    },
+    {
+        "Niveau": 5,
+        "Definition": "Administrateur"
+    },
+    {
+        "Niveau": 6,
+        "Definition": "superman5"
+    }
+]

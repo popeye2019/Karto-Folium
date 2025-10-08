@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Éditer un Enregistrement</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>Modifier l'Enregistrement</h1>
+    <form method="post">
+        {% for field, value in record.items() %}
+            <label for="{{ field }}">{{ field }}</label><br>
+            <input type="text" id="{{ field }}" name="{{ field }}" value="{{ value }}"><br><br>
+        {% endfor %}
+        <button type="submit">Sauvegarder</button>
+    </form>
+    <a href="{{ url_for('edit_sites.list_records') }}">Retour à la liste</a>
+
+   
+</body>
+</html>

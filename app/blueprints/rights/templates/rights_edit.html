@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Ajouter un droit' if record is none else 'Modifier un droit' }}{% endblock %}
+{% block content %}
+<h1>{{ 'Ajouter un droit' if record is none else 'Modifier le droit' }}</h1>
+<form method="post">
+    <label>Niveau :</label>
+    <input type="number" name="niveau" value="{{ record.Niveau if record else '' }}" {{ 'readonly' if record }}>
+    <br><br>
+    <label>Définition :</label>
+    <input type="text" name="definition" value="{{ record.Definition if record else '' }}">
+    <br><br>
+    <button type="submit">Enregistrer</button>
+</form>
+{% endblock %}

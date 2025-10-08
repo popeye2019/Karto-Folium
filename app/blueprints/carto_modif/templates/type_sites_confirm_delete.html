@@ -1,0 +1,28 @@
+
+{% extends "base.html" %}
+{% block title %}Supprimer un type{% endblock %}
+{% block content %}
+<section class="page-section confirm">
+  <h2>Supprimer le type « {{ type_payload.type }} »</h2>
+  {% if not can_delete %}
+    <p class="warning">Ce type est utilisé dans recap.json et ne peut pas être supprimé.</p>
+    <a class="button" href="{{ url_for('type_sites.list_type_sites') }}">Retour</a>
+  {% else %}
+    <p>Êtes-vous sûr de vouloir supprimer ce type ? l'opération est irréversible.</p>
+    <form method="post" class="actions">
+      <button type="submit" class="danger">Supprimer</button>
+      <a class="secondary" href="{{ url_for('type_sites.list_type_sites') }}">Annuler</a>
+    </form>
+  {% endif %}
+</section>
+
+<style>
+  .page-section.confirm { max-width: 500px; margin: 3rem auto; background: #1a242f; padding: 2rem; border-radius: 10px; text-align: center; }
+  .warning { color: #ffb347; margin-bottom: 1.5rem; }
+  .actions { display: flex; justify-content: center; gap: 1rem; margin-top: 1.5rem; }
+  .actions .danger { background: #c0392b; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; }
+  .actions .danger:hover { background: #e74c3c; }
+  .actions .secondary, .button { color: #9fb3c8; text-decoration: none; padding: 0.6rem 1.2rem; border-radius: 6px; border: 1px solid #2b3947; }
+  .actions .secondary:hover, .button:hover { text-decoration: underline; }
+</style>
+{% endblock %}

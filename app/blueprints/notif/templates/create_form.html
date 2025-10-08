@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}Creer une notification{% endblock %}
+{% block content %}
+<section class="page-section">
+  <h2>Creer une notification</h2>
+
+  {% if not users %}
+    <p class="empty-state">Aucun destinataire autorise pour le moment.</p>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('notif.create_from_form') }}" class="form-panel">
+    <div class="field">
+      <label for="recipient">Destinataire *</label>
+      <select id="recipient" name="recipient_id" required {% if not users %}disabled{% endif %}>
+        <option value="">-- Choisir --</option>
+        {% for user in users %}
+          <option value="{{ user.id }}" {% if form.recipient_id == user.id %}selected{% endif %}>
+            {{ user.prenom }} {{ user.nom }} ({{ user.login }})
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="message">Message *</label>
+      <textarea id="message" name="message" rows="5" required {% if not users %}disabled{% endif %}>{{ form.message }}</textarea>
+    </div>
+
+    <div class="field">
+      <label for="url">URL (facultatif)</label>
+      <input id="url" type="text" name="url" value="{{ form.url }}" {% if not users %}disabled{% endif %}>
+    </div>
+
+    <div class="actions">
+      <button type="submit" {% if not users %}disabled{% endif %}>Envoyer</button>
+      <a class="secondary" href="{{ url_for('notif.view_notifications') }}">&larr; Retour aux notifications</a>
+    </div>
+  </form>
+</section>
+
+<style>
+  .page-section {
+    max-width: 640px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #1a242f;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  }
+
+  .page-section h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+  }
+
+  .empty-state {
+    margin-bottom: 1rem;
+    font-style: italic;
+    color: #b0c4d4;
+  }
+
+  .form-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .form-panel .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .form-panel label {
+    font-weight: 600;
+  }
+
+  .form-panel input,
+  .form-panel textarea,
+  .form-panel select {
+    padding: 0.55rem 0.65rem;
+    border-radius: 6px;
+    border: 1px solid #526980;
+    background: #101820;
+    color: #fff;
+  }
+
+  .form-panel textarea {
+    resize: vertical;
+  }
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .actions button {
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    border: none;
+    background: #0c151c;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .actions button:hover:enabled {
+    background: #15212c;
+  }
+
+  .actions button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .actions .secondary {
+    color: #9fb3c8;
+    text-decoration: none;
+  }
+
+  .actions .secondary:hover {
+    text-decoration: underline;
+  }
+</style>
+{% endblock %}

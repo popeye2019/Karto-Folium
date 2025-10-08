@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Envoyer une notification multiple{% endblock %}
+{% block content %}
+<section class="page-section">
+  <h2>Envoyer une notification a plusieurs utilisateurs</h2>
+
+  <form method="POST" onsubmit="return validateForm();" class="form-panel">
+    <div class="field">
+      <label for="message">Message *</label>
+      <textarea id="message" name="message" rows="4" required></textarea>
+    </div>
+
+    <div class="field">
+      <label for="url">URL (facultatif)</label>
+      <input type="url" id="url" name="url">
+    </div>
+
+    <div class="field">
+      <label for="recipients">Destinataires *</label>
+      <select id="recipients" name="recipients" multiple size="6" required>
+        {% for user in users %}
+          <option value="{{ user.id }}">{{ user.Prenom }} {{ user.Nom }}</option>
+        {% endfor %}
+      </select>
+      <small>Selectionnez un ou plusieurs destinataires (Ctrl/Cmd + clic)</small>
+    </div>
+
+    <div class="actions">
+      <button type="submit">Envoyer</button>
+      <a class="secondary" href="{{ url_for('notif.view_notifications') }}">&larr; Retour</a>
+    </div>
+  </form>
+</section>
+
+<style>
+  .page-section {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #1a242f;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  }
+
+  .page-section h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .form-panel .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .form-panel textarea,
+  .form-panel input,
+  .form-panel select {
+    width: 100%;
+    padding: 0.55rem 0.65rem;
+    border-radius: 6px;
+    border: 1px solid #526980;
+    background: #101820;
+    color: #fff;
+  }
+
+  .form-panel textarea {
+    resize: vertical;
+  }
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .actions button {
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    border: none;
+    background: #0c151c;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .actions button:hover {
+    background: #15212c;
+  }
+
+  .actions .secondary {
+    color: #9fb3c8;
+    text-decoration: none;
+  }
+
+  .actions .secondary:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+function validateForm() {
+  const message = document.getElementById('message').value.trim();
+  const recipients = document.getElementById('recipients');
+  const selectedRecipients = Array.from(recipients.selectedOptions);
+
+  if (message === '') {
+    alert('Veuillez entrer un message.');
+    return false;
+  }
+
+  if (selectedRecipients.length === 0) {
+    alert('Veuillez selectionner au moins un destinataire.');
+    return false;
+  }
+
+  return true;
+}
+</script>
+{% endblock %}

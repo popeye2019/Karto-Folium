@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}📄 Liste des Sites{% endblock %}
+
+{% block content %}
+<h2>📋 Liste des sites</h2>
+
+<p><a href="{{ url_for('edit_sites.ajouter_site') }}">➕ Ajouter un nouveau site</a></p>
+
+<!-- 🔍 Filtres -->
+<div style="margin: 1em 0; display: flex; gap: 1em; flex-wrap: wrap;">
+    <input type="text" id="filterNom" placeholder="🔎 Nom" onkeyup="filterTable()" style="padding: 0.5em;">
+    <input type="text" id="filterCommune" placeholder="🏘️ Commune" onkeyup="filterTable()" style="padding: 0.5em;">
+    <select id="filterTypeSelect" onchange="filterTable()" style="padding: 0.5em;">
+        <option value="">⚙️ Tous les types</option>
+        {% for t in types %}
+        <option value="{{ t }}">{{ t }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<table id="siteTable" style="width: 100%; border-collapse: collapse; margin-top: 1em;">
+    <thead>
+        <tr style="background-color: #222; color: #fff; cursor: pointer;">
+            <th onclick="sortTable(0)">Nom ⬍</th>
+            <th onclick="sortTable(1)">Commune ⬍</th>
+            <th onclick="sortTable(2)">Type ⬍</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr style="background-color: {% if loop.index is even %}#2a2a2a{% else %}#1d1d1d{% endif %}; color: #ddd;">
+            <td>{{ record['NOM'] }}</td>
+            <td>{{ record['COMMUNE'] }}</td>
+            <td>{{ record['TYPE'] }}</td>
+            <td>
+                <a href="{{ url_for('edit_sites.edit_record', record_index=loop.index0) }}" style="color: #81d4fa;">
+                    🧭 Voir plus
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- 🎨 CSS -->
+<style>
+.row-even {
+    background-color: #2a2a2a;
+}
+.row-odd {
+    background-color: #1d1d1d;
+}
+</style>
+
+<!-- 🔧 JS -->
+<script>
+function sansAccents(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function filterTable() {
+    const inputNom = sansAccents(document.getElementById("filterNom").value.toUpperCase());
+    const inputCommune = sansAccents(document.getElementById("filterCommune").value.toUpperCase());
+    const selectedType = sansAccents(document.getElementById("filterTypeSelect").value.toUpperCase());
+
+    const table = document.getElementById("siteTable");
+    const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+    for (let row of rows) {
+        const nom = sansAccents(row.cells[0].textContent.toUpperCase());
+        const commune = sansAccents(row.cells[1].textContent.toUpperCase());
+        const type = sansAccents(row.cells[2].textContent.toUpperCase());
+
+        const matchesType = selectedType === "" || type === selectedType;
+
+        row.style.display =
+            nom.includes(inputNom) &&
+            commune.includes(inputCommune) &&
+            matchesType
+            ? ""
+            : "none";
+    }
+}
+
+function sortTable(colIndex) {
+    const table = document.getElementById("siteTable");
+    const tbody = table.tBodies[0];
+    const rows = Array.from(tbody.rows);
+
+    const isAsc = table.getAttribute("data-sort-dir") !== "asc";
+    rows.sort((a, b) => {
+        const aText = a.cells[colIndex].textContent.trim().toLowerCase();
+        const bText = b.cells[colIndex].textContent.trim().toLowerCase();
+        return isAsc ? aText.localeCompare(bText) : bText.localeCompare(aText);
+    });
+
+    // Replace rows
+    for (let row of rows) {
+        tbody.appendChild(row);
+    }
+
+    table.setAttribute("data-sort-dir", isAsc ? "asc" : "desc");
+}
+</script>
+{% endblock %}

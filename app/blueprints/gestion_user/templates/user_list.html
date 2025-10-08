@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}📋Liste des utilisateurs{% endblock %}
+
+{% block content %}
+<body>
+    <h1>Liste des utilisateurs</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                {% if user_level == 5 %}
+                <th>Login</th>
+                <th>Action</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user["Nom"] }}</td>
+                <td>{{ user["Prenom"] }}</td>
+                <td>{{ user["Email"] }}</td>
+                {% if user_level == 5 %}
+                <td>{{ user["Login"] }}</td>
+                <td><a href="{{ url_for('users.edit_user', login=user['Login']) }}">Modifier</a></td
+                {% endif %}>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+            {% if user_level == 5 %}
+            <a href="{{ url_for('users.add_user') }}" class="btn btn-primary">Ajouter un utilisateur</a>
+            {% endif %}
+
+    {% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}✏️ Modifier un utilisateur{% endblock %}
+
+{% block content %}
+
+    <!-- Formulaire de modification -->
+    <form method="POST" action="{{ url_for('users.edit_user', login=user['Login']) }}">
+        <label for="nom">Nom :</label>
+        <input type="text" id="nom" name="nom" value="{{ user['Nom'] }}" required><br><br>
+
+        <label for="prenom">Prénom :</label>
+        <input type="text" id="prenom" name="prenom" value="{{ user['Prenom'] }}" required><br><br>
+
+        <label for="email">Email :</label>
+        <input type="email" id="email" name="email" value="{{ user['Email'] }}" required><br><br>
+
+        <label>
+            <input type="checkbox" name="notification" {% if user['Notification'] %}checked{% endif %}>
+            Recevoir des notifications
+        </label><br><br>
+        <!-- Ligne de separation-->
+        <hr style="border: none; height: 3px; background-color: #444; margin: 2em 0;">
+        <!-- Boutons -->
+        <div style="margin-top: 2em;">
+            <!-- 💾 Enregistrer -->
+            <button type="submit">💾 Enregistrer</button>
+
+            <!-- 🗑️ Supprimer -->
+            <form method="POST" action="{{ url_for('users.delete_user', login=user['Login']) }}" style="display: inline;">
+                <button type="submit" onclick="return confirm('Confirmer la suppression ?')"
+                        style="background-color: darkred; color: white;">🗑️ Supprimer</button>
+            </form>
+
+            <!-- ↩️ Annuler -->
+            <a href="{{ url_for('users.list_users') }}" style="
+                display: inline-block;
+                margin-left: 1em;
+                padding: 0.5em 1em;
+                border-radius: 6px;
+                background-color: #666;
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+            ">
+                ↩️ Annuler
+            </a>
+        </div>
+    </form>
+
+{% endblock %}

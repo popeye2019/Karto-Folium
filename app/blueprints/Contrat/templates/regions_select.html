@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte Interactive</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Carte Interactive</h1>
+    </header>
+    <main>
+    <h2>Carte des Régions</h2>
+    <iframe src="{{ url_for('static', filename='map.html') }}" width="100%" height="600"></iframe>
+    <a href="{{ url_for('main.home') }}">Retour à l'accueil</a>
+   </main>
+    <footer>
+        <p>© 2024 - Carte Interactive</p>
+    </footer>
+</body>
+</html>

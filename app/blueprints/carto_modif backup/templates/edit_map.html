@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Éditeur de Carte Dynamique</title>
+</head>
+<body>
+    <h1>Carte Interactive avec Position de Clic</h1>
+    <form method="POST" action="{{ url_for('edit_map.update_marker') }}">
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude" placeholder="48.8566" required>
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude" placeholder="2.3522" required>
+        <button type="submit">Mettre à jour le marqueur</button>
+    </form>
+    <h2>Carte:</h2>
+    <iframe src="{{ url_for('edit_map.get_map') }}" width="100%" height="500" id="map_iframe"></iframe>
+
+    <script>
+        // Fonction pour recevoir les coordonnées cliquées depuis la carte
+        function updateCoordinates(lat, lon) {
+            document.getElementById('latitude').value = lat;  // Met à jour la latitude
+            document.getElementById('longitude').value = lon;  // Met à jour la longitude
+        }
+    </script>
+</body>
+</html>

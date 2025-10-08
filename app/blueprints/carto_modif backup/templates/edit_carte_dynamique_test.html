@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Édition avec Carte</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: sans-serif;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    .column {
+      width: 50%;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    #map {
+      height: 80vh;
+      border: 1px solid #ccc;
+    }
+    input, textarea, select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Colonne formulaire -->
+    <div class="column" id="formulaire">
+      <h2>Formulaire</h2>
+      <form method="POST" action="/submit">
+        <label for="nom">Nom :</label>
+        <input type="text" name="nom" id="nom">
+
+        <label for="description">Description :</label>
+        <textarea name="description" id="description" rows="4"></textarea>
+
+        <label for="categorie">Catégorie :</label>
+        <select name="categorie" id="categorie">
+          <option value="A">A</option>
+          <option value="B">B</option>
+        </select>
+
+        <input type="hidden" id="coords" name="coords">
+
+        <button type="submit">Enregistrer</button>
+      </form>
+    </div>
+
+    <!-- Colonne carte -->
+    <div class="column" id="carte">
+      <h2>Localisation</h2>
+      <div id="map"></div>
+      <p>Coordonnées sélectionnées : <span id="coords-display"></span></p>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const coordsInput = document.getElementById("coords");
+      const coordsDisplay = document.getElementById("coords-display");
+
+      const map = L.map("map").setView([48.8566, 2.3522], 6); // Paris par défaut
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19
+      }).addTo(map);
+
+      let marker;
+      map.on("click", function (e) {
+        const latlng = e.latlng;
+        coordsInput.value = latlng.lat + "," + latlng.lng;
+        coordsDisplay.textContent = latlng.lat.toFixed(5) + ", " + latlng.lng.toFixed(5);
+        if (marker) map.removeLayer(marker);
+        marker = L.marker(latlng).addTo(map);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+[
+    {
+        "type": "Accessoire de réseau",
+        "icon": "compteur.png",
+        "group": "Accessoires réseau",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "BASSIN ORAGE",
+        "icon": "bassin_orage.png",
+        "group": "Bassins d'orage",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "Barrage",
+        "icon": "barrage.png",
+        "group": "Barrages",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "COMMUNE",
+        "icon": "cityhall-512_2.png",
+        "group": "Communes",
+        "enabled": true,
+        "cluster": false,
+        "scale": 0.8,
+        "show": true
+    },
+    {
+        "type": "DO",
+        "icon": "deversoir_orage.png",
+        "group": "Déversoirs d'orage",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "EP",
+        "icon": "poste_relevage.png",
+        "group": "Postes EP",
+        "enabled": true,
+        "cluster": true,
+        "scale": 1.0,
+        "show": true
+    },
+    {
+        "type": "EU",
+        "icon": "poste_relevage.png",
+        "group": "Postes EU",
+        "enabled": true,
+        "cluster": true,
+        "scale": 1.0,
+        "show": true
+    },
+    {
+        "type": "Filtre a sable",
+        "icon": "fas.png",
+        "group": "Filtres à sable",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "Lagune",
+        "icon": "lagune3.png",
+        "group": "Lagunes",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "PLUVIAL",
+        "icon": "avaloir.png",
+        "group": "Postes pluviaux",
+        "enabled": true,
+        "cluster": true,
+        "scale": 1.0,
+        "show": true
+    },
+    {
+        "type": "PR",
+        "icon": "poste_relevage.png",
+        "group": "Postes de relevage",
+        "enabled": true,
+        "cluster": true,
+        "scale": 1.0,
+        "show": true
+    },
+    {
+        "type": "Point de mesure ou prélèvement",
+        "icon": "point_prelevement.png",
+        "group": "Points de mesure",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "Poste de chloration",
+        "icon": "cl2.png",
+        "group": "Postes de chloration",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "Prise d'eau",
+        "icon": "captage.png",
+        "group": "Prises d'eau",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "RHIZOSTEP",
+        "icon": "rhizostep256.png",
+        "group": "Rhizostep",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "Reprise seule",
+        "icon": "surpresseur.png",
+        "group": "Reprises",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "Ressource",
+        "icon": "captage.png",
+        "group": "Ressources",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "Réservoir",
+        "icon": "chateau_eau.png",
+        "group": "Réservoirs",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "Réservoir + reprise",
+        "icon": "reprise.png",
+        "group": "Réservoirs + reprises",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.1,
+        "show": false
+    },
+    {
+        "type": "Réservoir sur usine",
+        "icon": "reprise.png",
+        "group": "Réservoirs sur usine",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "STEP",
+        "icon": "step.png",
+        "group": "Stations d'épuration",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": true
+    },
+    {
+        "type": "Station alerte",
+        "icon": "station_alerte.png",
+        "group": "Stations alerte",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.0,
+        "show": false
+    },
+    {
+        "type": "Usine",
+        "icon": "usine_ep.png",
+        "group": "Usines",
+        "enabled": true,
+        "cluster": false,
+        "scale": 1.05,
+        "show": false
+    }
+]

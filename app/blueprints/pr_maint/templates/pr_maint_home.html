@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% block title %}Maintenance des sites{% endblock %}
+{% block content %}
+<section class="maintenance">
+  <header>
+    <h2>Espace maintenance</h2>
+    <p>Vous êtes dans la zone dédiée aux opérations de maintenance et à la saisie des interventions sur les sites référencés dans <code>recap.json</code>.</p>
+
+  </header>
+
+  {% if recent_comments %}
+  <section class="recent-comments">
+    <h3>Derniers messages</h3>
+    <ul class="recent-comments__list">
+      {% for comment in recent_comments %}
+      <li class="recent-comments__item">
+        <details>
+          <summary>
+            <span class="recent-comments__headline">
+              {{ comment.date or 'Date inconnue' }}
+              {% if comment.utilisateur %} - {{ comment.utilisateur }}{% endif %}
+              {% if comment.site %} - {{ comment.site }}{% endif %}
+            </span>
+            <span class="recent-comments__preview">
+              {{ comment.commentaire|default('')|truncate(90, True, '...') }}
+            </span>
+          </summary>
+          <div class="recent-comments__content">
+            <p>
+              {{ comment.commentaire|default('Aucun commentaire')|replace('
+', '<br>')|safe }}
+            </p>
+          </div>
+        </details>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <div class="summary">
+    <div class="card">
+      <h3>Sites disponibles</h3>
+      <p class="value">{{ site_count }}</p>
+      <p class="hint">Nombre total d'entrées dans le fichier recap.json.</p>
+    </div>
+  </div>
+
+  <div class="search-panel">
+    <div class="filters">
+      <label>
+        <span>Filtrer par type</span>
+        <select id="filterType">
+          <option value="">Tous</option>
+        </select>
+      </label>
+      <label>
+        <span>Filtrer par commune</span>
+        <select id="filterCommune">
+          <option value="">Toutes</option>
+        </select>
+      </label>
+      <label>
+        <span>Rechercher par nom</span>
+        <input type="text" id="filterNom" placeholder="Nom du site" autocomplete="off">
+      </label>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table id="maintenanceTable" class="maintenance-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Nom</th>
+          <th>Commune</th>
+          <th>Intervention</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for site in sites %}
+          <tr>
+            <td data-type="{{ site.TYPE|default('') }}">{{ site.TYPE|default('') }}</td>
+            <td>{{ site.NOM|default('') }}</td>
+            <td>{{ site.COMMUNE|default('') }}</td>
+            <td class="actions">
+              <button type="button" class="intervention-btn" data-emplacement="{{ site.INDEX if site.INDEX is defined else loop.index0 }}" data-site="{{ site.NOM|default('') }}" data-commune="{{ site.COMMUNE|default('') }}">
+                Créer
+              </button>
+            </td>
+          </tr>
+        {% else %}
+          <tr class="empty-row">
+            <td colspan="4" class="empty">Aucun site trouvé.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div id="interventionPanel" class="intervention-panel hidden">
+    <h3>Nouvelle intervention</h3>
+    <p class="context">Site sélectionné : <span id="selectedSite">aucun</span></p>
+    <form method="post" action="{{ url_for('pr_maint.create_intervention') }}" class="intervention-form">
+      <input type="hidden" name="emplacement" id="formEmplacement">
+      <input type="hidden" name="site_label" id="formSiteLabel">
+      <label>
+        <span>Commentaire *</span>
+        <textarea name="commentaire" id="formComment" rows="4" required placeholder="Décrivez l'intervention ou l'observation..."></textarea>
+      </label>
+      <div class="form-actions">
+        <button type="submit" class="btn primary">Enregistrer l'intervention</button>
+        <button type="button" class="btn secondary" id="cancelIntervention">Annuler</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .maintenance { max-width: 1100px; margin: 2rem auto; background: #101b25; padding: 2.4rem; border-radius: 14px; box-shadow: 0 18px 42px rgba(0,0,0,0.35); }
+  .maintenance header h2 { margin: 0; font-size: 1.8rem; }
+  .maintenance header p { margin-top: 0.6rem; color: #a9c4e2; }
+  .recent-comments { margin: 1.8rem 0 2rem; background: #172533; border-radius: 12px; padding: 1rem 1.2rem; box-shadow: 0 12px 28px rgba(0,0,0,0.3); }
+  .recent-comments h3 { margin: 0 0 0.8rem; font-size: 1.2rem; color: #e0edff; }
+  .recent-comments__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.6rem; }
+  .recent-comments__item details { border: 1px solid #233343; border-radius: 10px; background: #101b25; overflow: hidden; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+  .recent-comments__item summary { display: grid; grid-template-columns: 1fr auto; gap: 0.25rem; padding: 0.75rem 1rem; cursor: pointer; color: #d6e3f5; align-items: center; list-style: none; }
+  .recent-comments__item summary::marker { display: none; }
+  .recent-comments__item summary::-webkit-details-marker { display: none; }
+  .recent-comments__item summary::after { content: "\25BC"; font-size: 0.7rem; color: #7ca4d7; transition: transform 0.2s ease; }
+  .recent-comments__headline { font-weight: 600; color: #9ec2ff; }
+  .recent-comments__preview { font-size: 0.9rem; color: #b8c9de; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .recent-comments__item details[open] summary::after { transform: rotate(180deg); }
+  .recent-comments__item details[open] { border-color: #3a6df0; box-shadow: 0 0 0 1px rgba(58,109,240,0.35); }
+  .recent-comments__item details:hover { border-color: #31527c; }
+  .recent-comments__item summary:focus-visible { outline: 2px solid #3a6df0; outline-offset: 2px; }
+  .recent-comments__content { padding: 0 1rem 1rem; color: #e5ecf7; font-size: 0.95rem; line-height: 1.45; }
+  .recent-comments__content p { margin: 0; }
+  .summary { margin: 2rem 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.2rem; }
+  .summary .card { background: #172533; border-radius: 12px; padding: 1.2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.25); }
+  .summary .card h3 { margin: 0; font-size: 1.1rem; }
+  .summary .card .value { font-size: 2.4rem; margin: 0.6rem 0 0; font-weight: 700; color: #4da3ff; }
+  .summary .card .hint { margin-top: 0.6rem; color: #8fa3bb; font-size: 0.9rem; }
+  .search-panel { margin-bottom: 1.5rem; }
+  .filters { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; }
+  .filters label { display: flex; flex-direction: column; gap: 0.4rem; color: #d6e3f5; font-size: 0.95rem; }
+  .filters input, .filters select { padding: 0.55rem 0.8rem; border-radius: 6px; border: 1px solid #2b3947; background: #101820; color: #fff; min-width: 200px; }
+  .table-wrapper { overflow-x: auto; }
+  .maintenance-table { width: 100%; border-collapse: collapse; }
+  .maintenance-table th, .maintenance-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid #203244; text-align: left; }
+  .maintenance-table thead th { background: #172533; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.85rem; color: #d6e3f5; }
+  .maintenance-table td.actions { text-align: center; }
+  .maintenance-table td.actions .intervention-btn { background: #1b6ef3; color: #fff; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
+  .maintenance-table td.actions .intervention-btn:hover { background: #2c7fff; }
+  .maintenance-table tbody tr:hover { background: #132230; }
+  .maintenance-table tbody .empty { text-align: center; padding: 1.4rem; color: #8fa3bb; }
+  .intervention-panel { margin-top: 2rem; background: #0f1a26; border: 1px solid #1f2d3c; border-radius: 12px; padding: 1.6rem; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+  .intervention-panel.hidden { display: none; }
+  .intervention-panel h3 { margin-top: 0; }
+  .intervention-panel .context { color: #9fb3c8; margin-bottom: 1rem; }
+  .intervention-form label { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; color: #d6e3f5; }
+  .intervention-form textarea { resize: vertical; min-height: 120px; padding: 0.6rem 0.8rem; border-radius: 8px; border: 1px solid #2b3947; background: #101820; color: #fff; }
+  .form-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .form-actions .btn { padding: 0.55rem 1.2rem; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; }
+  .form-actions .btn.primary { background: #198754; color: #fff; }
+  .form-actions .btn.primary:hover { background: #1fa263; }
+  .form-actions .btn.secondary { background: #233343; color: #cfe0f3; }
+  .form-actions .btn.secondary:hover { background: #2c4054; }
+</style>
+
+<script>
+  const tableBody = document.querySelector('#maintenanceTable tbody');
+  const filterNom = document.getElementById('filterNom');
+  const filterType = document.getElementById('filterType');
+  const filterCommune = document.getElementById('filterCommune');
+  const rows = Array.from(tableBody.querySelectorAll('tr'));
+  const panel = document.getElementById('interventionPanel');
+  const formEmplacement = document.getElementById('formEmplacement');
+  const formSiteLabel = document.getElementById('formSiteLabel');
+  const formComment = document.getElementById('formComment');
+  const selectedSite = document.getElementById('selectedSite');
+  const cancelBtn = document.getElementById('cancelIntervention');
+  const typeSet = new Set();
+  const communeSet = new Set();
+
+  rows.forEach(row => {
+    if (row.classList.contains('empty-row')) {
+      return;
+    }
+    const type = row.querySelector('td[data-type]')?.dataset.type || '';
+    const commune = row.cells[2]?.textContent || '';
+    if (type) typeSet.add(type);
+    if (commune) communeSet.add(commune);
+  });
+
+  [...typeSet].sort((a, b) => a.localeCompare(b)).forEach(type => {
+    const option = document.createElement('option');
+    option.value = type;
+    option.textContent = type;
+    filterType.appendChild(option);
+  });
+
+  [...communeSet].sort((a, b) => a.localeCompare(b)).forEach(commune => {
+    const option = document.createElement('option');
+    option.value = commune;
+    option.textContent = commune;
+    filterCommune.appendChild(option);
+  });
+
+  function applyFilters() {
+    const query = filterNom.value.trim().toLowerCase();
+    const typeFilter = filterType.value;
+    const communeFilter = filterCommune.value;
+
+    let visibleCount = 0;
+    rows.forEach(row => {
+      if (row.classList.contains('empty-row')) {
+        row.style.display = 'none';
+        return;
+      }
+      const nameCell = row.cells[1];
+      const typeCell = row.querySelector('td[data-type]');
+      const communeCell = row.cells[2];
+      if (!nameCell || !typeCell || !communeCell) {
+        row.style.display = 'none';
+        return;
+      }
+      const name = nameCell.textContent.toLowerCase();
+      const type = typeCell.dataset.type || '';
+      const commune = communeCell.textContent || '';
+
+      const matchName = !query || name.includes(query);
+      const matchType = !typeFilter || type === typeFilter;
+      const matchCommune = !communeFilter || commune === communeFilter;
+
+      const shouldShow = matchName && matchType && matchCommune;
+      row.style.display = shouldShow ? '' : 'none';
+      if (shouldShow) visibleCount += 1;
+    });
+
+    tableBody.querySelectorAll('tr.empty-row').forEach(row => {
+      row.style.display = visibleCount === 0 ? '' : 'none';
+    });
+  }
+
+  filterNom.addEventListener('input', applyFilters);
+  filterType.addEventListener('change', applyFilters);
+  filterCommune.addEventListener('change', applyFilters);
+
+  document.querySelectorAll('.intervention-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const emplacement = btn.dataset.emplacement;
+      const site = btn.dataset.site || '';
+      const commune = btn.dataset.commune || '';
+      formEmplacement.value = emplacement;
+      formSiteLabel.value = site ? `${site} (${commune})` : site;
+      selectedSite.textContent = site ? `${site} - ${commune}` : 'Aucun';
+      formComment.value = '';
+      panel.classList.remove('hidden');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      formComment.focus();
+    });
+  });
+
+  cancelBtn.addEventListener('click', () => {
+    panel.classList.add('hidden');
+    formEmplacement.value = '';
+    formSiteLabel.value = '';
+    formComment.value = '';
+  });
+
+  if (!tableBody.querySelector('tr.empty-row')) {
+    const emptyRow = document.createElement('tr');
+    emptyRow.className = 'empty-row';
+    const cell = document.createElement('td');
+    cell.colSpan = 4;
+    cell.className = 'empty';
+    cell.textContent = 'Aucun site trouvé.';
+    emptyRow.appendChild(cell);
+    tableBody.appendChild(emptyRow);
+  }
+
+  applyFilters();
+</script>
+{% endblock %}

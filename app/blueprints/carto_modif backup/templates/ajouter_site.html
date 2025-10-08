@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}➕ Ajouter un site{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 700px; margin-top: 2rem;">
+    <h2 style="margin-bottom: 2rem;">➕ Ajouter un site</h2>
+
+    <form method="post">
+        {% for field, value in record.items() %}
+            <div style="margin-bottom: 1.5em;">
+                <label for="{{ field }}" style="font-weight: bold; display: block; margin-bottom: 0.3em;">
+                    {{ field.replace('_', ' ').capitalize() }}
+                </label>
+                <input 
+                    type="text" 
+                    id="{{ field }}" 
+                    name="{{ field }}" 
+                    value="{{ value }}" 
+                    {% if field.lower() == "index" %}readonly style="background-color: #eee;"{% endif %}
+                    style="width: 100%; padding: 0.4em; border: 1px solid #888; border-radius: 4px;">
+            </div>
+        {% endfor %}
+
+        <div style="margin-top: 2em;">
+            <button type="submit">✅ Ajouter</button>
+            <a href="{{ url_for('edit_sites.list_records') }}" style="margin-left: 1.5em;">← Retour à la liste</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

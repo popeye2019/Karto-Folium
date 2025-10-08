@@ -1,0 +1,12 @@
+table,
+td {
+    border: 1px solid #333;
+    vertical-align: middle;
+}
+
+thead,
+tfoot {
+    color: #fff;
+    background-color: #333;
+}
+

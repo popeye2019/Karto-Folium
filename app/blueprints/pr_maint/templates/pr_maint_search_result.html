@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Résultat géolocalisation{% endblock %}
+{% block content %}
+<section class="search-result">
+  <h2>Coordonnées détectées</h2>
+  <p>Latitude : <strong>{{ latitude }}</strong></p>
+  <p>Longitude : <strong>{{ longitude }}</strong></p>
+  {% if zone %}
+  <p>Zone : <strong>{{ zone }}</strong></p>
+  {% endif %}
+
+  {% if multiple %}
+    <div class="candidate-table">
+      <h3>Sites trouvés dans un rayon de 200 m</h3>
+      {% if candidate_sites %}
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Nom</th>
+            <th>Commune</th>
+            <th>Distance (m)</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for site in candidate_sites %}
+          <tr>
+            <td>{{ site.TYPE }}</td>
+            <td>{{ site.NOM }}</td>
+            <td>{{ site.COMMUNE }}</td>
+            <td>{{ '%.1f'|format(site.distance) }}</td>
+            <td>
+              <form method="post" action="{{ url_for('pr_maint.create_intervention') }}">
+                <input type="hidden" name="emplacement" value="{{ site.INDEX }}">
+                <input type="hidden" name="site_label" value="{{ site.NOM }} ({{ site.COMMUNE }})">
+                <button type="submit" class="btn">Créer une intervention</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p>Aucun site à proximité.</p>
+      {% endif %}
+    </div>
+  {% else %}
+    {% if site %}
+      <div class="selected-site">
+        <h3>Site détecté</h3>
+        <p><strong>Type :</strong> {{ site.TYPE }}</p>
+        <p><strong>Nom :</strong> {{ site.NOM }}</p>
+        <p><strong>Commune :</strong> {{ site.COMMUNE }}</p>
+        <p><strong>Distance estimée :</strong> {{ '%.1f'|format(site.distance) if site.distance is defined else 'N/A' }} m</p>
+        <form method="post" action="{{ url_for('pr_maint.create_intervention') }}" class="quick-intervention">
+          <input type="hidden" name="emplacement" value="{{ site.INDEX }}">
+          <input type="hidden" name="site_label" value="{{ site.NOM }} ({{ site.COMMUNE }})">
+          <label>
+            <span>Commentaire *</span>
+            <textarea name="commentaire" rows="4" required placeholder="Décrivez l'intervention..."></textarea>
+          </label>
+          <button type="submit" class="btn primary">Enregistrer l'intervention</button>
+        </form>
+      </div>
+    {% else %}
+      <p>Aucun site correspondant trouvé dans le périmètre.</p>
+    {% endif %}
+  {% endif %}
+
+  <div class="actions">
+    <a class="btn secondary" href="{{ url_for('pr_maint.localisation_page') }}">Nouvelle localisation</a>
+    <a class="btn secondary" href="{{ url_for('pr_maint.maintenance_home') }}">Retour Maintenance</a>
+  </div>
+</section>
+
+<style>
+  .search-result { max-width: 900px; margin: 2rem auto; background: #101b25; padding: 2.4rem; border-radius: 14px; box-shadow: 0 18px 42px rgba(0,0,0,0.35); }
+  .candidate-table table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+  .candidate-table th, .candidate-table td { border-bottom: 1px solid #223142; padding: 0.6rem 0.8rem; text-align: left; }
+  .candidate-table th { background: #15212c; text-transform: uppercase; letter-spacing: 0.5px; }
+  .btn { display: inline-flex; align-items: center; padding: 0.6rem 1.2rem; border-radius: 6px; border: none; cursor: pointer; text-decoration: none; font-weight: 600; }
+  .btn { background: #1b6ef3; color: #fff; }
+  .btn:hover { opacity: 0.9; }
+  .btn.secondary { background: #233343; color: #d6e3f5; }
+  .actions { margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+  .quick-intervention { margin-top: 1.2rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .quick-intervention textarea { resize: vertical; min-height: 120px; padding: 0.6rem 0.8rem; border-radius: 8px; border: 1px solid #2b3947; background: #0f1a26; color: #fff; }
+</style>
+{% endblock %}

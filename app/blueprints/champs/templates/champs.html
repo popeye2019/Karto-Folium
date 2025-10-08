@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Éditer un Enregistrement</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>Champs trouvés dans l'enregistrement JSON :</h1>
+    <h2>{{ user.login }}</h2>
+
+    {% if fields %}
+        <ul>
+            {% for field in fields %}
+                <li>{{ field }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun champ trouvé.</p>
+    {% endif %}
+    <a href="{{ url_for('edit_sites.list_records') }}">Retour à la liste</a>
+
+   
+</body>
+</html>

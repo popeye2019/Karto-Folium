@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte interactive</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/interactive_map.js') }}"></script>
+</head>
+<body>
+    <div class="carto_edit_container">
+        <!-- Section gauche : Boutons et champs -->
+        <div class="carto_edit_control_panel">
+            <h2>Contrôle de la carte</h2>
+            <button onclick="addMarker()">Ajouter un marqueur</button>
+            <button onclick="centerMap()">Centrer la carte</button>
+            <br><br>
+            <label for="latitude">Latitude :</label>
+            <input type="text" id="latitude" placeholder="Ex : 45.15">
+            <br>
+            <label for="longitude">Longitude :</label>
+            <input type="text" id="longitude" placeholder="Ex : 1.46">
+            <br><br>
+            <button onclick="updatePosition()">Aller à cette position</button>
+            <button onclick="testCommunication()">Tester la communication</button>
+
+        </div>
+
+        <!-- Section droite : iframe -->
+        <div class="carto_edit_iframe_container">
+            <iframe src="/map" id="map-iframe" class="carto_edit_iframe" frameborder="0"></iframe>
+        </div>
+    </div>
+</body>
+</html>

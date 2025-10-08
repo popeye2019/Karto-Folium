@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <a href="{{ url_for('auth.logout') }}" style="color: crimson; font-weight: bold;">🔒 Déconnexion
+    </a>
+{% endblock %}
+
+{% block content %}
+
+<div class="main-container">
+
+    <p> <h3> Debut de la page main </h3></p>
+    <form action="{{ url_for('auth.logout') }}" method="post">
+    <button type="submit" class="btn btn-danger">Déconnexion</button>
+    </form>
+
+
+<div class="Carte utile">
+<h4> Carte assainissement.<br/></h4>
+ <code><a href="{{url_for('static', filename='global/ouvrages.html') }}" target="_blank">Carte Assainissement</a></code>
+
+
+ 
+
+    <h2>test page html_edit_carte_dynamique.html</h2>
+    {% if user %}
+        <h2>Bienvenue {{ user.prenom }} {{ user.nom }}</h2>
+    {% endif %}
+
+    
+    <h2>Liste des users.json</h2>
+    <a href="{{ url_for('users.list_users') }}">Voir la liste des utilisateurs</a>
+
+    <h2>Liste des droits</h2>
+    <a href="{{ url_for('user_rights.index') }}">Voir les droits des utilisateurs</a>
+
+
+    <h3>Carte dynamique test version 1 avec clic sur la carte</h3>
+    <a href="{{ url_for('edit_carte_dynamique_test.affiche') }}">Voir la carte dynamique</a>
+
+
+    <h2>Debug Iframe</h2>
+    <a href="{{ url_for('edit_map.index') }}">Debug clic </a>
+    
+    <h2>Liste des sites</h2>
+    <a href="{{ url_for('edit_sites.list_records') }}">Voir tous les enregistrements</a>
+
+    <h2>Bienvenue sur la carte interactive</h2>
+    <a href="{{ url_for('region.map') }}">Voir la carte interactive</a>
+    
+    <h2>Creation / modification des contrats</h2>
+    <a href="{{ url_for('contrats.list_regions') }}">Creer/Modifier les contrats</a>
+    
+    <h2>Notifications</h2>
+    <a href="{{ url_for('notif.view_notifications') }}">Test de notification</a>
+
+    <h2>Creation Notifications</h2>
+    <a href="{{ url_for('notif.create_from_form') }}">Creation notification</a>
+
+    <h2>Creation Notifications Multiples</h2>
+    <a href="{{ url_for('notif.send_multi_notification') }}">Creation Multiples de notification</a>
+
+    <p> <h3> fin de la page main </h3></p>
+
+</div>
+{% endblock %}

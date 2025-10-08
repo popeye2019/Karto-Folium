@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter des droits utilisateurs{% endblock %}
+
+{% block content %}
+    <h1>Ajouter des Droits Utilisateurs A FINIR</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Niveau</th>
+                <th>Définition</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in data %}
+            <tr>
+                <td>{{ record.Niveau }}</td>
+                <td>{{ record.Definition }}</td>
+                <td>
+                    <a href="{{ url_for('user_rights.edit', niveau=record.Niveau) }}">Modifier</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <form action="{{ url_for('user_rights.add_right') }}" method="get">
+        <button type="submit">Ajouter</button>
+    </form>
+{% endblock %}

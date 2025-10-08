@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Modifier un site{% endblock %}
+{% block content %}
+<section class="page-section">
+  <h2>Modifier un site</h2>
+  <form method="post" class="form-panel">
+    {% for field, value in record.items() %}
+      <div class="field">
+        <label for="{{ field }}">{{ field.replace('_',' ').capitalize() }}</label>
+        {% if field == 'INDEX' %}
+          <input type="text" id="INDEX_display" value="{{ value }}" readonly>
+          <input type="hidden" name="INDEX" value="{{ value }}">
+        {% elif field == 'TYPE' %}
+          <select id="TYPE" name="TYPE" required>
+            <option value="">- choisir -</option>
+            {% for t in site_types %}
+              <option value="{{ t }}" {% if value == t %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+          </select>
+        {% elif field == 'COMMUNE' %}
+          <select id="COMMUNE" name="COMMUNE" required>
+            <option value="">- choisir -</option>
+            {% for commune in communes %}
+              <option value="{{ commune }}" {% if value == commune %}selected{% endif %}>{{ commune }}</option>
+            {% endfor %}
+          </select>
+        {% elif field == 'ETAT' %}
+          <select id="ETAT" name="ETAT" required>
+            {% set selected_state = value or site_states[0] %}
+            {% for state in site_states %}
+              <option value="{{ state }}" {% if selected_state == state %}selected{% endif %}>{{ state }}</option>
+            {% endfor %}
+          </select>
+        {% else %}
+          <input type="text" id="{{ field }}" name="{{ field }}" value="{{ value }}">
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="actions">
+      <button type="submit">Sauvegarder</button>
+      <a class="secondary" href="{{ url_for('edit_sites.list_records') }}">Retour</a>
+    </div>
+  </form>
+
+  <div class="map-panel">
+    <h3>Carte</h3>
+    <iframe
+      src="{{ url_for('edit_map.get_map', lat=lat0, lon=lon0) }}"
+      width="100%" height="500" id="map_iframe"
+      style="border:1px solid #ccc;border-radius:4px;">
+    </iframe>
+  </div>
+</section>
+
+<style>
+  .page-section {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #1a242f;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  }
+
+  .form-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .field input,
+  .field select {
+    padding: 0.55rem 0.65rem;
+    border-radius: 6px;
+    border: 1px solid #526980;
+    background: #101820;
+    color: #fff;
+  }
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+
+  .actions button {
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    border: none;
+    background: #0c151c;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .actions button:hover {
+    background: #15212c;
+  }
+
+  .actions .secondary {
+    color: #9fb3c8;
+    text-decoration: none;
+  }
+
+  .actions .secondary:hover {
+    text-decoration: underline;
+  }
+
+  .map-panel iframe {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+</style>
+
+<script>
+  function updateCoordinates(lat, lon){
+    const idsLat = ['latitude','LATITUDE','lat','LAT'];
+    const idsLon = ['longitude','LONGITUDE','lon','LONG','lng','LNG'];
+    for (const id of idsLat){ const el = document.getElementById(id); if (el) el.value = lat; }
+    for (const id of idsLon){ const el = document.getElementById(id); if (el) el.value = lon; }
+  }
+</script>
+{% endblock %}

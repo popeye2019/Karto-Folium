@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <a href="{{ url_for('auth.logout') }}" style="color: crimson; font-weight: bold;">🔒 Déconnexion
+    </a>
+{% endblock %}
+
+{% block content %}
+  {% if user %}
+      <h2>Bienvenue {{ user.prenom }} {{ user.nom }}</h2>
+  {% endif %}
+
+<div class="main-container">
+
+    <p> <h3> Debut de la page main </h3></p>
+    <form action="{{ url_for('auth.logout') }}" method="post">
+    <button type="submit" class="btn btn-danger">Déconnexion</button>
+    </form>
+
+
+<div class="Carte utile">
+<h4> Carte assainissement.<br/></h4>
+ <code><a href="{{url_for('static', filename='global/ouvrages.html') }}" target="_blank">Carte Assainissement</a></code>
+
+    <h2>Editeur de sites</h2>
+    <a href="{{ url_for('edit_sites.list_records') }}">Liste les sites</a>
+
+    <h2>Editeur de type ouvrages</h2>
+    <a href="{{ url_for('type_sites.list_type_sites') }}">Liste les types de sites</a></a>
+
+    
+    <h2>Editeur utilisateurs</h2>
+    <a href="{{ url_for('users.list_users') }}">Liste des utilisateurs</a>
+
+    <h2>Editeur des droits</h2>
+    <a href="{{ url_for('user_rights.index') }}">Liste des droits des utilisateurs</a>
+
+    <h2>Maintenance des sites</h2>
+    <a href="{{ url_for('pr_maint.maintenance_home') }}">Espace maintenance (accès niveau maintenance)</a>
+
+    <h2>Localiser un poste</h2>
+    <a href="{{ url_for('pr_maint.localisation_page') }}">Recueil GPS (maintenance)</a>
+
+    <h2>Notifications</h2>
+    <a href="{{ url_for('notif.view_notifications') }}">Test de notification</a>
+
+    <h2>Creation Notifications</h2>
+    <a href="{{ url_for('notif.create_from_form') }}">Creation notification</a>
+
+    <h2>Creation Notifications Multiples</h2>
+    <a href="{{ url_for('notif.send_multi_notification') }}">Creation Multiples de notification</a>
+
+    <p> <h3> fin de la page main </h3></p>
+
+</div>
+{% endblock %}

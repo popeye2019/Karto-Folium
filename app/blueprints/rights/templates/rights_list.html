@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Liste des niveaux de droits{% endblock %}
+{% block content %}
+<h1>Liste des niveaux</h1>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Niveau</th>
+            <th>Définition</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in data %}
+        <tr>
+            <td>{{ record.Niveau }}</td>
+            <td>{{ record.Definition }}</td>
+            <td>
+                {% if record.Niveau > 5 %}
+                    <a href="{{ url_for('user_rights.edit', niveau=record.Niveau) }}">Modifier</a>
+                    <form action="{{ url_for('user_rights.delete', niveau=record.Niveau) }}" method="post" style="display:inline;">
+                        <button type="submit">Supprimer</button>
+                    </form>
+                {% else %}
+                    <em>Non modifiable</em>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<br>
+<a href="{{ url_for('user_rights.add_right') }}">Ajouter un droit</a>
+{% endblock %}

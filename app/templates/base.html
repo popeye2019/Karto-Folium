@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ app_version }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
+    <style>
+      .flash-container { margin: 1rem 0; }
+      .flash { padding: 0.6rem; border-radius: 4px; margin-bottom: 0.5rem; }
+      .flash.success { background: #1f6f43; }
+      .flash.danger { background: #7f1d1d; }
+      .flash.warning { background: #7f5300; }
+      .flash.info { background: #1b4b7f; }
+      .user-summary {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+      }
+      .user-summary .user-name { font-weight: 600; }
+      .notification-link {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        color: inherit;
+        text-decoration: none;
+      }
+      .notification-link .badge {
+        position: absolute;
+        top: -8px;
+        right: -10px;
+        background: red;
+        color: #fff;
+        border-radius: 50%;
+        padding: 0 6px;
+        font-size: 0.75em;
+        font-weight: bold;
+      }
+      .user-menu {
+        list-style-type: none;
+        padding-left: 0;
+        margin-top: 0.8rem;
+      }
+      .user-menu li { margin-bottom: 0.4rem; }
+      .user-menu li:last-child { margin-bottom: 0; }
+    </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="column">
+      <ul>
+        <li><a href="{{ url_for('main.home') }}">Accueil</a></li>
+        <li>{% block title %} pas de lien {% endblock %}</li>
+      </ul>
+    </div>
+    <div class="column">
+      <img src="{{ url_for('static', filename='images/krto_logo.webp') }}" alt="Logo du site carto folium" height="64" width="64">
+      KRTO: {{ app_version }}
+    </div>
+    <div class="column">
+      {% if user %}
+      <details>
+        <summary class="user-summary">
+          <span class="user-name">{{ user.prenom }} {{ user.nom }}</span>
+          <a href="{{ url_for('notif.view_notifications') }}" class="notification-link" aria-label="Voir les notifications">
+            &#128276;
+            {% if notif_count > 0 %}
+            <span class="badge">{{ notif_count }}</span>
+            {% endif %}
+          </a>
+        </summary>
+        <ul class="user-menu">
+          <li><a href="{{ url_for('auth.change_password') }}">Modifier mon mot de passe</a></li>
+          <li><a href="{{ url_for('users.edit_user', login=user.login) }}">Modifier utilisateur</a></li>
+          <li><hr></li>
+          <li><a href="{{ url_for('auth.logout') }}">&#128274; Déconnexion</a></li>
+        </ul>
+      </details>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flash-container">
+    {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+
+<main>
+  {% block content %}
+  <!-- Les pages spécifiques inséreront leur contenu ici -->
+  {% endblock %}
+</main>
+
+{% block footer %}
+<footer>
+  <p style="text-align:center;">
+    <img src="{{ url_for('static', filename='images/qrcode.png') }}" alt="QR code pour enregistrer le site en favori" height="64" width="64">
+  </p>
+  <p>Carto folium par Francis.</p>
+  <p><a href="http://popeye.mine.nu">http://popeye.mine.nu</a></p>
+</footer>
+{% endblock %}
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

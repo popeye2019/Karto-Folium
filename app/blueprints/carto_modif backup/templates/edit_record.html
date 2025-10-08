@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}✏️ Modifier un enregistrement avec Carte{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 900px; margin-top: 2rem;">
+    <h2 style="margin-bottom: 2rem;">✏️ Modifier un enregistrement</h2>
+
+    <form method="post">
+        <div style="display: flex; gap: 2rem;">
+            <!-- Partie formulaire -->
+            <div style="flex: 1;">
+                {% for field, value in record.items() %}
+                    <div style="margin-bottom: 1.5em;">
+                        <label for="{{ field }}" style="font-weight: bold; display: block; margin-bottom: 0.3em;">
+                            {{ field.replace('_', ' ').capitalize() }}
+                        </label>
+                        {% if field == "INDEX" %}
+      <input type="text" id="INDEX_display" value="{{ value }}" readonly
+             style="width:100%;padding:0.4em;border:1px solid #888;border-radius:4px;background:#f5f5f5;">
+      <input type="hidden" name="INDEX" value="{{ value }}">
+    {% else %}
+      <input type="text" id="{{ field }}" name="{{ field }}" value="{{ value }}"
+             style="width:100%;padding:0.4em;border:1px solid #888;border-radius:4px;">
+    {% endif %}
+  </div>
+{% endfor %}
+
+                <div style="margin-top: 2em;">
+                    <button type="submit">💾 Sauvegarder</button>
+                    <a href="{{ url_for('edit_sites.list_records') }}" style="margin-left: 1.5em;">← Retour à la liste</a>
+                </div>
+            </div>
+
+            <!-- Partie carte -->
+            <div style="flex: 1;">
+                <h3>Carte interactive</h3>
+                <iframe 
+                    src="{{ url_for('edit_map.get_map') }}" 
+                    width="100%" 
+                    height="500" 
+                    id="map_iframe"
+                    style="border: 1px solid #ccc; border-radius: 4px;">
+                </iframe>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Fonction appelée par la carte (iframe)
+    function updateCoordinates(lat, lon) {
+        if (document.getElementById('latitude')) {
+            document.getElementById('latitude').value = lat;
+        }
+        if (document.getElementById('longitude')) {
+            document.getElementById('longitude').value = lon;
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,92 @@
+[
+    {
+        "id": "1748974065",
+        "recipient_id": "45aff9af-a922-43f8-9403-b6d2282663a9",
+        "sender_id": null,
+        "message": "test3",
+        "url": "http://toto.com",
+        "is_read": true,
+        "created_at": "2025-06-03T20:07:45.377998"
+    },
+    {
+        "id": "1748974065",
+        "recipient_id": "45aff9af-a922-43f8-9403-b6d2282663a9",
+        "sender_id": null,
+        "message": "test3",
+        "url": "http://toto.com",
+        "is_read": true,
+        "created_at": "2025-06-03T20:07:45.377998"
+    },
+    {
+        "id": "1748974066",
+        "recipient_id": "45aff9af-a922-43f8-9403-b6d2282663a9",
+        "sender_id": null,
+        "message": "test5",
+        "url": "http://toto.com",
+        "is_read": true,
+        "created_at": "2025-06-03T20:07:45.377998"
+    },
+    {
+        "id": "1749052694",
+        "recipient_id": "2f7d740d-d8ac-49e5-8688-a78e543d3557",
+        "sender_id": null,
+        "message": "coucou les nazes",
+        "url": "",
+        "is_read": true,
+        "created_at": "2025-06-04T17:58:14.230104"
+    },
+    {
+        "id": "1749052694",
+        "recipient_id": "45aff9af-a922-43f8-9403-b6d2282663a9",
+        "sender_id": null,
+        "message": "coucou les nazes",
+        "url": "",
+        "is_read": true,
+        "created_at": "2025-06-04T17:58:14.230104"
+    },
+    {
+        "id": "1749052694",
+        "recipient_id": "fb63a510-77e0-4e6b-9040-4d12b249e05e",
+        "sender_id": null,
+        "message": "coucou les nazes",
+        "url": "",
+        "is_read": true,
+        "created_at": "2025-06-04T17:58:14.230104"
+    },
+    {
+        "id": "1749052694",
+        "recipient_id": "c625c71e-e638-4890-bba4-a850f055f03b",
+        "sender_id": null,
+        "message": "coucou les nazes",
+        "url": "",
+        "is_read": true,
+        "created_at": "2025-06-04T17:58:14.230104"
+    },
+    {
+        "id": "1759584763",
+        "recipient_id": "45aff9af-a922-43f8-9403-b6d2282663a9",
+        "sender_id": null,
+        "message": "test notif",
+        "url": "",
+        "is_read": false,
+        "created_at": "2025-10-04T15:32:43.422132"
+    },
+    {
+        "id": "1759584763",
+        "recipient_id": "fb63a510-77e0-4e6b-9040-4d12b249e05e",
+        "sender_id": null,
+        "message": "test notif",
+        "url": "",
+        "is_read": false,
+        "created_at": "2025-10-04T15:32:43.422132"
+    },
+    {
+        "id": "1759584763",
+        "recipient_id": "c625c71e-e638-4890-bba4-a850f055f03b",
+        "sender_id": null,
+        "message": "test notif",
+        "url": "",
+        "is_read": false,
+        "created_at": "2025-10-04T15:32:43.422132"
+    }
+]

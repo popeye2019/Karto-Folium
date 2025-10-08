@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte Interactive</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Carte Interactive</h1>
+    </header>
+    <main>
+    <h2>Bienvenue sur la carte interactive</h2>
+    <a href="{{ url_for('main.map') }}">Voir la carte</a>
+    </main>
+    <footer>
+        <p>© 2024 - Carte Interactive</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Mes notifications{% endblock %}
+{% block content %}
+<section class="notification-page">
+  <h2>Vos notifications</h2>
+
+  <div id="notif-list" class="notification-stack">
+    {% for notif in notifications %}
+      <div class="notification-card {% if not notif.is_read %}unread{% else %}read{% endif %}" data-id="{{ notif.id }}">
+        <div class="notification-message">{{ notif.message }}</div>
+        {% if notif.url %}
+          <div class="notification-link">Lien : <a href="{{ notif.url }}" target="_blank" rel="noopener noreferrer">{{ notif.url }}</a></div>
+        {% endif %}
+        <small class="notification-date">{{ notif.created_at|format_notification_date }}</small>
+        {% if not notif.is_read %}
+          <button type="button" class="mark-read" data-id="{{ notif.id }}">Marquer comme lue</button>
+        {% endif %}
+      </div>
+    {% else %}
+      <p class="notification-empty">Vous n'avez aucune notification.</p>
+    {% endfor %}
+  </div>
+
+  <p class="back-link"><a href="{{ url_for('main.home') }}">&larr; Retour a l'accueil</a></p>
+</section>
+
+<style>
+  .notification-page {
+    max-width: 720px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #1a242f;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  }
+
+  .notification-page h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .notification-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .notification-card {
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #2c3e50;
+    background: #0f1821;
+    position: relative;
+  }
+
+  .notification-card.unread {
+    border-color: #3f7ccb;
+    box-shadow: 0 0 0 1px #3f7ccb;
+  }
+
+  .notification-message {
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .notification-link {
+    margin-bottom: 0.4rem;
+  }
+
+  .notification-date {
+    color: #9fb3c8;
+  }
+
+  .mark-read {
+    margin-top: 0.6rem;
+    padding: 0.4rem 0.8rem;
+    background: #0c151c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .mark-read:hover {
+    background: #15212c;
+  }
+
+  .notification-empty {
+    font-style: italic;
+    color: #b0c4d4;
+  }
+
+  .back-link {
+    margin-top: 2rem;
+  }
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.body.dataset.notificationRefresh = 'true';
+  document.body.dataset.notificationRefreshInterval = '300000';
+</script>
+<script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+<script>
+  (function() {
+    function handleMarkAsRead(event) {
+      const button = event.target.closest('button[data-id]');
+      if (!button) {
+        return;
+      }
+      const id = button.dataset.id;
+      const card = button.closest('.notification-card');
+      fetch(`/notif/read/${id}`, { method: 'POST' })
+        .then(() => {
+          button.remove();
+          if (card) {
+            card.classList.remove('unread');
+            card.classList.add('read');
+          }
+        })
+        .catch((error) => console.error('Impossible de marquer la notification comme lue', error));
+    }
+
+    const list = document.getElementById('notif-list');
+    if (!list) {
+      return;
+    }
+    list.addEventListener('click', handleMarkAsRead);
+  })();
+</script>
+{% endblock %}

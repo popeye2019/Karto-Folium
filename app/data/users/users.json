@@ -1,0 +1,80 @@
+[
+    {
+        "Nom": "Doe",
+        "Prenom": "Johnny deep",
+        "Login": "johndoe",
+        "Mot de passe": "scrypt:32768:8:1$vmjn7HEbFAPMyWHE$981fb9fc8aaf95c7f5cd265e739857be7815876902e4f7d0128a7184d50416bf9d1a4d25b3e02221b4ac271112d6e9d2570ecadfe09ea77e617c17ca714ce484",
+        "Niveau acces": 1,
+        "Notification": true,
+        "Email": "johndoe@example.com",
+        "Date_connec": "2024-11-12T10:00:00",
+        "Contrat": [
+            "Contrat1",
+            "Contrat2"
+        ],
+        "id": "2f7d740d-d8ac-49e5-8688-a78e543d3557"
+    },
+    {
+        "Nom": "POPU",
+        "Prenom": "Francis",
+        "Login": "fpu",
+        "Mot de passe": "scrypt:32768:8:1$0hWaG3pzaqSHjIgd$3acba5aa40fe790286f328232dbd454aeca675911d5dc0e56fc9b8cdaa431a0358fe0978c813c6874fbb54442311c8db6441a6d15345f38a8a11f01ed1b672d8",
+        "Niveau acces": 5,
+        "Notification": true,
+        "Email": "francis.popu@example.com",
+        "Date_connec": "2024-11-12T10:00:00",
+        "Contrat": [
+            "Contrat1",
+            "Contrat2"
+        ],
+        "id": "45aff9af-a922-43f8-9403-b6d2282663a9"
+    },
+    {
+        "Nom": "azerty",
+        "Prenom": "azerty",
+        "Login": "azerty",
+        "Mot de passe": "scrypt:32768:8:1$eBfGmvZo4bAxPbDM$954f13359a961158a200768d4ffa13d6e43f5a4877a01e633230ffb42d7dd87992eb55124c1ea8cab254d770f8b6b9647677122cc9a20a4ec61627ff4186d752",
+        "Niveau acces": 1,
+        "Notification": true,
+        "Email": "azert@azert",
+        "Date_connec": null,
+        "Contrat": [],
+        "id": "fb63a510-77e0-4e6b-9040-4d12b249e05e"
+    },
+    {
+        "Nom": "toto",
+        "Prenom": "toto",
+        "Login": "toto",
+        "Mot de passe": "scrypt:32768:8:1$Id3lORlHAMfE23f7$35a910d5ac4165e183dfc921ef541b007a632256509e3a19e88bf98dbe4e73cc5ac9a70e7504bd378f62cb8f23e797e8b3d99f69debbf34c5a13010d224de4d0",
+        "Niveau acces": 2,
+        "Notification": true,
+        "Email": "toto@toto.fr",
+        "Date_connec": null,
+        "Contrat": [],
+        "id": "c625c71e-e638-4890-bba4-a850f055f03b"
+    },
+    {
+        "Nom": "martin",
+        "Prenom": "paulo",
+        "Login": "pmn",
+        "Mot de passe": "scrypt:32768:8:1$LnnHsyKAlagGwVu9$0adbbdf5d4890e7a3afbcb4f3a04f441b051c88d7b120196c55e56e7993c5ebd8708a6ba0c46a505847a68e11310d1fcf85c508d685ffef6b39317550bffc4ae",
+        "Niveau acces": 3,
+        "Notification": false,
+        "Email": "paul.martin@martin.fr",
+        "Date_connec": null,
+        "Contrat": [],
+        "id": "56234f94-f26a-42de-bf77-0fa7487a780c"
+    },
+    {
+        "Nom": "De Matos",
+        "Prenom": "Gaetan",
+        "Login": "gdm",
+        "Mot de passe": "scrypt:32768:8:1$WTD9IbmASkvsxiQc$6de45f65f7650d41c362b1164126e02e5de7b28883dad34c074dd15434432d52a9b5ee0d308256dbdfc4f0923d64342271d53e90d940b4f8e91b1462717b0cc2",
+        "Niveau acces": 5,
+        "Notification": true,
+        "Email": "gaetan.dematos@suez.com",
+        "Date_connec": null,
+        "Contrat": [],
+        "id": "4302ed6c-fc9e-4dfa-9713-beb2598afd7c"
+    }
+]
