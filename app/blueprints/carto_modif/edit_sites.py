@@ -22,7 +22,6 @@ from app.utils.utils_json import (
     save_json_file as save_data,
 )
 from app.utils.auth import login_required, require_level
-from app.utils.geocarto_lib import generate_map
 
 DATA_FILE = "./app/data/sites/recap.json"
 TYPE_FILE = "./app/data/sites/type_site.json"
@@ -62,6 +61,16 @@ def _get_communes_list() -> list[str]:
                     extracted.append(str(label).strip())
             else:
                 extracted.append(str(value).strip())
+        # Also merge communes present in the main data file to avoid false negatives
+        # when the static communes list is incomplete.
+        try:
+            data = load_data(DATA_FILE)
+            extra = [
+                str(record.get("COMMUNE", "")).strip() for record in data if record.get("COMMUNE")
+            ]
+            extracted.extend(extra)
+        except Exception:
+            pass
         raw_communes = extracted
 
     communes = [item for item in raw_communes if item]
@@ -312,6 +321,8 @@ def add_record():
 def regenerate_map():
     """Regenerate the static map HTML and save to static/global/ouvrages.html."""
     try:
+        # Lazy import to avoid importing folium during test collection
+        from app.utils.geocarto_lib import generate_map  # type: ignore
         app_dir = Path(current_app.root_path)
         output_path = app_dir / "static" / "global" / "ouvrages.html"
         output_path.parent.mkdir(parents=True, exist_ok=True)
