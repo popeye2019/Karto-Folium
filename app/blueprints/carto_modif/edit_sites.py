@@ -121,6 +121,8 @@ def _normalize_state(value: str | None, allowed_states: tuple[str, ...]) -> str:
 
 
 @edit_sites_bp.route("/")
+@login_required
+@require_level(1)
 def list_records():
     """Display the list of registered sites along with available fields."""
     data = load_data(DATA_FILE)
@@ -130,6 +132,8 @@ def list_records():
 
 
 @edit_sites_bp.route("/edit/<int:record_index>", methods=["GET", "POST"])
+@login_required
+@require_level(1)
 def edit_record(record_index: int):
     """Edit the site identified by ``record_index``."""
     data = load_data(DATA_FILE)
@@ -210,6 +214,8 @@ def edit_record(record_index: int):
 
 
 @edit_sites_bp.route("/add", methods=["GET", "POST"])
+@login_required
+@require_level(1)
 def add_record():
     """Create a new site entry."""
     data = load_data(DATA_FILE)
@@ -295,8 +301,8 @@ def add_record():
         communes=communes,
         site_types=site_types,
         site_states=site_states,
-        lat0=46.5,
-        lon0=2.5,
+        lat0=45.162719,
+        lon0=1.468320
     )
 
 

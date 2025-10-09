@@ -6,12 +6,12 @@
   <h2>Supprimer le type « {{ type_payload.type }} »</h2>
   {% if not can_delete %}
     <p class="warning">Ce type est utilisé dans recap.json et ne peut pas être supprimé.</p>
-    <a class="button" href="{{ url_for('type_sites.list_type_sites') }}">Retour</a>
+    <a class="button btn secondary btn-icon" href="{{ url_for('type_sites.list_type_sites') }}">↩ Retour</a>
   {% else %}
     <p>Êtes-vous sûr de vouloir supprimer ce type ? l'opération est irréversible.</p>
     <form method="post" class="actions">
-      <button type="submit" class="danger">Supprimer</button>
-      <a class="secondary" href="{{ url_for('type_sites.list_type_sites') }}">Annuler</a>
+      <button type="submit" class="btn danger btn-icon">🗑️ Supprimer</button>
+      <a class="btn secondary btn-icon" href="{{ url_for('type_sites.list_type_sites') }}">↩ Annuler</a>
     </form>
   {% endif %}
 </section>
@@ -21,6 +21,7 @@
   .warning { color: #ffb347; margin-bottom: 1.5rem; }
   .actions { display: flex; justify-content: center; gap: 1rem; margin-top: 1.5rem; }
   .actions .danger { background: #c0392b; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; }
+  .actions .danger, .actions .secondary, .button { display: inline-flex; align-items: center; gap: 0.4rem; }
   .actions .danger:hover { background: #e74c3c; }
   .actions .secondary, .button { color: #9fb3c8; text-decoration: none; padding: 0.6rem 1.2rem; border-radius: 6px; border: 1px solid #2b3947; }
   .actions .secondary:hover, .button:hover { text-decoration: underline; }

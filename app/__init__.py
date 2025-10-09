@@ -16,7 +16,7 @@ def create_app(config_object: str | object = "config.Config") -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_object)
 
-    app.config.setdefault("APP_VERSION", os.getenv("APP_VERSION", "v9"))
+    app.config.setdefault("APP_VERSION", os.getenv("APP_VERSION", "Karto-Folium-dev"))
     app.config.setdefault("NOTIFICATION_STORE", NOTIFICATION_STORE)
     app.config.setdefault("SITE_ETATS", DEFAULT_SITE_ETATS)
 

@@ -145,6 +145,8 @@ def upload_type_icon():
 
 
 @type_sites_bp.route("/icon/<path:filename>")
+@login_required
+@require_level(1)
 def type_icon(filename: str):
     safe_path = ICON_DIR / filename
     if not safe_path.is_file():
@@ -154,6 +156,8 @@ def type_icon(filename: str):
 
 
 @type_sites_bp.route("/")
+@login_required
+@require_level(1)
 def list_type_sites():
     types = _load_types()
     usage_counters: Dict[str, int] = {}
@@ -172,6 +176,8 @@ def list_type_sites():
 
 
 @type_sites_bp.route("/add", methods=["GET", "POST"])
+@login_required
+@require_level(1)
 def add_type_site():
     type_payload: Dict[str, Any] = {
         "type": "",
@@ -205,6 +211,8 @@ def add_type_site():
 
 
 @type_sites_bp.route("/edit/<int:type_index>", methods=["GET", "POST"])
+@login_required
+@require_level(1)
 def edit_type_site(type_index: int):
     types = _load_types()
     if type_index < 0 or type_index >= len(types):
@@ -233,6 +241,8 @@ def edit_type_site(type_index: int):
 
 
 @type_sites_bp.route("/delete/<int:type_index>", methods=["GET", "POST"])
+@login_required
+@require_level(1)
 def delete_type_site(type_index: int):
     types = _load_types()
     if type_index < 0 or type_index >= len(types):

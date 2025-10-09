@@ -17,9 +17,9 @@
             <td>{{ record.Definition }}</td>
             <td>
                 {% if record.Niveau > 5 %}
-                    <a href="{{ url_for('user_rights.edit', niveau=record.Niveau) }}">Modifier</a>
+                    <a href="{{ url_for('user_rights.edit', niveau=record.Niveau) }}" class="btn secondary btn-icon">✏️ Modifier</a>
                     <form action="{{ url_for('user_rights.delete', niveau=record.Niveau) }}" method="post" style="display:inline;">
-                        <button type="submit">Supprimer</button>
+                        <button type="submit" class="btn danger btn-icon">🗑️ Supprimer</button>
                     </form>
                 {% else %}
                     <em>Non modifiable</em>
@@ -30,5 +30,5 @@
     </tbody>
 </table>
 <br>
-<a href="{{ url_for('user_rights.add_right') }}">Ajouter un droit</a>
+<a href="{{ url_for('user_rights.add_right') }}" class="btn primary btn-icon">➕ Ajouter un droit</a>
 {% endblock %}

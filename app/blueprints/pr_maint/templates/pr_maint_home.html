@@ -109,8 +109,8 @@
         <textarea name="commentaire" id="formComment" rows="4" required placeholder="Décrivez l'intervention ou l'observation..."></textarea>
       </label>
       <div class="form-actions">
-        <button type="submit" class="btn primary">Enregistrer l'intervention</button>
-        <button type="button" class="btn secondary" id="cancelIntervention">Annuler</button>
+        <button type="submit" class="btn primary btn-icon">💾 Enregistrer l'intervention</button>
+        <button type="button" class="btn secondary btn-icon" id="cancelIntervention">↩ Annuler</button>
       </div>
     </form>
   </div>
@@ -162,6 +162,7 @@
   .intervention-form textarea { resize: vertical; min-height: 120px; padding: 0.6rem 0.8rem; border-radius: 8px; border: 1px solid #2b3947; background: #101820; color: #fff; }
   .form-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
   .form-actions .btn { padding: 0.55rem 1.2rem; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; }
+  .form-actions .btn { display: inline-flex; align-items: center; gap: 0.4rem; }
   .form-actions .btn.primary { background: #198754; color: #fff; }
   .form-actions .btn.primary:hover { background: #1fa263; }
   .form-actions .btn.secondary { background: #233343; color: #cfe0f3; }

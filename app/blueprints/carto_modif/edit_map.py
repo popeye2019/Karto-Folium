@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import folium
 from flask import Blueprint, render_template, request
+from app.utils.auth import login_required, require_level
 
 edit_map_bp = Blueprint("edit_map", __name__, template_folder="templates")
 
 
 @edit_map_bp.route("/map")
+@login_required
+@require_level(1)
 def get_map():
     """Return an interactive map that exposes the selected coordinates."""
     latitude = request.args.get("lat", type=float, default=46.5)
@@ -30,7 +33,7 @@ def get_map():
       <div class="line"><strong>Lat:</strong> <span id="lat-val"></span>
         &nbsp; <strong>Lon:</strong> <span id="lon-val"></span></div>
       <div class="line"><small>Double-clic pour deplacer le point.</small></div>
-      <button type="button" onclick="sendToParent()">Valider</button>
+      <button type="button" onclick="sendToParent()">✅ Valider</button>
     </div>
     """
     folium_map.get_root().html.add_child(folium.Element(overlay_html))

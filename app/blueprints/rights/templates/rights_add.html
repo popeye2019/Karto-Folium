@@ -3,48 +3,29 @@
 {% block title %}➕ Ajouter un droit{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 600px; margin-top: 2rem;">
-    <h2 style="margin-bottom: 2rem;">➕ Ajouter un droit utilisateur</h2>
+<div class="container-narrow">
+    <h2 class="section-title">➕ Ajouter un droit utilisateur</h2>
 
     <form method="post">
-        <div style="margin-bottom: 1.5em;">
-            <label for="niveau" style="font-weight: bold;">Niveau :</label>
-            <input type="number" id="niveau" name="niveau" required
-                   style="width: 100%; padding: 0.4em; border: 1px solid #888; border-radius: 4px;">
+        <div class="form-group">
+            <label for="niveau" class="form-label">Niveau :</label>
+            <input type="number" id="niveau" name="niveau" required class="form-input">
         </div>
 
-        <div style="margin-bottom: 1.5em;">
-            <label for="definition" style="font-weight: bold;">Définition :</label>
+        <div class="form-group">
+            <label for="definition" class="form-label">Définition :</label>
             <input type="text" id="definition" name="definition" required
-                   style="width: 100%; padding: 0.4em; border: 1px solid #888; border-radius: 4px;">
+                   class="form-input">
         </div>
 
-        <hr style="border: none; height: 3px; background-color: #444; margin: 2em 0;">
+        <hr class="hr-sep">
 
-        <div style="display: flex; gap: 1em; flex-wrap: wrap;">
-            <button type="submit" style="
-                width: 150px;
-                padding: 0.6em 0;
-                border-radius: 6px;
-                font-weight: bold;
-                background-color: var(--button-base);
-                color: white;">
-                💾 Ajouter
-            </button>
-
-            <a href="{{ url_for('users.list_rights') }}" style="
-                display: inline-block;
-                width: 150px;
-                text-align: center;
-                padding: 0.6em 0;
-                border-radius: 6px;
-                font-weight: bold;
-                background-color: #666;
-                color: white;
-                text-decoration: none;">
-                ↩️ Annuler
-            </a>
+        <div class="actions">
+            <button type="submit" class="btn primary btn-icon">➕ Ajouter</button>
+            <a href="{{ url_for('users.list_rights') }}" class="btn secondary btn-icon">↩ Annuler</a>
         </div>
     </form>
 </div>
 {% endblock %}
+
+

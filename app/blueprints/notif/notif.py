@@ -17,7 +17,7 @@ from flask import (
     url_for,
 )
 
-from app.utils.auth import login_required
+from app.utils.auth import login_required, require_level
 from app.utils.utils_json import load_json_file as load_json
 from app.utils.utils_json import save_json_file as save_json
 
@@ -29,6 +29,7 @@ notif_bp = Blueprint("notif", __name__, template_folder="templates")
 
 @notif_bp.route("/")
 @login_required
+@require_level(1)
 def show_index():
     """Legacy entry point redirecting to the notification list."""
     user = session.get("user", {})
@@ -39,6 +40,7 @@ def show_index():
 
 @notif_bp.route("/notifications/<user_id>")
 @login_required
+@require_level(1)
 def get_notifications(user_id: str):
     """Return unread notifications for the given user id."""
     notifications = load_json(NOTIFICATION_FILE)
@@ -52,6 +54,7 @@ def get_notifications(user_id: str):
 
 @notif_bp.route("/notify", methods=["POST"])
 @login_required
+@require_level(1)
 def create_notification():
     """Persist a notification provided as JSON payload."""
     payload = request.get_json(force=True)
@@ -65,6 +68,7 @@ def create_notification():
 
 @notif_bp.route("/read/<notif_id>", methods=["POST"])
 @login_required
+@require_level(1)
 def mark_as_read(notif_id: str):
     """Mark a notification as read."""
     notifications = load_json(NOTIFICATION_FILE)
@@ -77,6 +81,7 @@ def mark_as_read(notif_id: str):
 
 @notif_bp.route("/send-multi", methods=["GET", "POST"])
 @login_required
+@require_level(1)
 def send_multi_notification():
     """Send a notification to multiple recipients."""
     current_user = session.get("user", {})
@@ -115,6 +120,7 @@ def send_multi_notification():
 
 @notif_bp.route("/create", methods=["GET", "POST"])
 @login_required
+@require_level(1)
 def create_from_form():
     """Create a notification from a form submission."""
     current_user = session.get("user", {})
@@ -171,6 +177,7 @@ def create_from_form():
 
 @notif_bp.route("/view")
 @login_required
+@require_level(1)
 def view_notifications():
     """Display all notifications for the current user."""
     user = session.get("user")

@@ -33,8 +33,8 @@
       <label><input type="checkbox" name="show" {% if type_payload.show %}checked{% endif %}> Visible par défaut</label>
     </div>
     <div class="actions">
-      <button type="submit">Enregistrer</button>
-      <a class="secondary" href="{{ url_for('type_sites.list_type_sites') }}">Annuler</a>
+      <button type="submit" class="btn primary btn-icon">💾 Enregistrer</button>
+      <a class="btn secondary btn-icon" href="{{ url_for('type_sites.list_type_sites') }}">↩ Annuler</a>
     </div>
   </form>
 </section>
@@ -50,6 +50,7 @@
   .checkbox-group input { width: auto; }
   .actions { display: flex; gap: 1rem; margin-top: 1rem; }
   .actions button { background: #0c151c; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; }
+  .actions button, .actions .secondary { display: inline-flex; align-items: center; gap: 0.4rem; }
   .actions button:hover { background: #15212c; }
   .actions .secondary { color: #9fb3c8; text-decoration: none; align-self: center; }
   .actions .secondary:hover { text-decoration: underline; }

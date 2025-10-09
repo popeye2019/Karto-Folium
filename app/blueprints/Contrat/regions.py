@@ -6,6 +6,7 @@ import os
 
 import folium
 from flask import Blueprint, render_template, url_for
+from app.utils.auth import login_required, require_level
 
 from app.utils.utils_json import load_json_file
 
@@ -16,12 +17,16 @@ DEPARTMENT_FILE = "./app/data/geojson/dept2020.geojson"
 
 
 @region_bp.route("/")
+@login_required
+@require_level(1)
 def home():
     """Display the entry point for the region map."""
     return render_template("regions_home.html")
 
 
 @region_bp.route("/map")
+@login_required
+@require_level(1)
 def map_view():
     """Render the folium map containing clickable regions."""
     geojson_data = load_json_file(REGION_FILE)
@@ -50,6 +55,8 @@ def map_view():
 
 
 @region_bp.route("/region/<region_id>")
+@login_required
+@require_level(1)
 def region_details(region_id: str):
     """List the departments associated with a region."""
     departments_data = load_json_file(DEPARTMENT_FILE)

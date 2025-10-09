@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}✏️ Modifier un utilisateur{% endblock %}
+{% block title %}Modifier un utilisateur{% endblock %}
 
 {% block content %}
 
@@ -20,32 +20,21 @@
             Recevoir des notifications
         </label><br><br>
         <!-- Ligne de separation-->
-        <hr style="border: none; height: 3px; background-color: #444; margin: 2em 0;">
+        <hr>
         <!-- Boutons -->
-        <div style="margin-top: 2em;">
-            <!-- 💾 Enregistrer -->
-            <button type="submit">💾 Enregistrer</button>
+        <div class="actions u-mt-2">
+            <button type="submit" class="btn primary btn-icon">💾 Enregistrer</button>
 
-            <!-- 🗑️ Supprimer -->
             <form method="POST" action="{{ url_for('users.delete_user', login=user['Login']) }}" style="display: inline;">
-                <button type="submit" onclick="return confirm('Confirmer la suppression ?')"
-                        style="background-color: darkred; color: white;">🗑️ Supprimer</button>
+                <button type="submit" class="btn danger btn-icon icon-delete" onclick="return confirm('Confirmer la suppression ?')">🗑️ Supprimer</button>
             </form>
 
-            <!-- ↩️ Annuler -->
-            <a href="{{ url_for('users.list_users') }}" style="
-                display: inline-block;
-                margin-left: 1em;
-                padding: 0.5em 1em;
-                border-radius: 6px;
-                background-color: #666;
-                color: white;
-                text-decoration: none;
-                font-weight: bold;
-            ">
-                ↩️ Annuler
-            </a>
+            <a href="{{ url_for('users.list_users') }}" class="btn secondary btn-icon icon-back">↩ Annuler</a>
         </div>
     </form>
 
 {% endblock %}
+
+
+
+

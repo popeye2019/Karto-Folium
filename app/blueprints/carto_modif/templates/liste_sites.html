@@ -5,12 +5,12 @@
 {% block content %}
 <h2>Liste des sites</h2>
 
-<p><a href="{{ url_for('edit_sites.add_record') }}">Ajouter un nouveau site</a></p>
+<p><a href="{{ url_for('edit_sites.add_record') }}" class="btn primary btn-icon">➕ Ajouter un nouveau site</a></p>
 
 {% if user and user.access_level >= 4 %}
-<form action="{{ url_for('edit_sites.regenerate_map') }}" method="post" style="margin: 1em 0;">
-  <button type="submit" class="btn btn-primary">Régénérer la carte</button>
-  <span style="margin-left: 0.5em; color: #9bb3d1; font-size: 0.9em;">Génère app/static/global/ouvrages.html</span>
+<form action="{{ url_for('edit_sites.regenerate_map') }}" method="post" class="u-my-1">
+  <button type="submit" class="btn primary btn-icon">🔄 Régénérer la carte</button>
+  <span class="hint">Génère app/static/global/ouvrages.html</span>
 </form>
 {% endif %}
 
@@ -42,12 +42,12 @@
             <td>{{ record['COMMUNE'] }}</td>
             <td>{{ record['TYPE'] }}</td>
             <td>
-                <a href="{{ url_for('edit_sites.edit_record', record_index=loop.index0) }}" style="color: #81d4fa; margin-right: .8em;">
-                    Modifier
+                <a href="{{ url_for('edit_sites.edit_record', record_index=loop.index0) }}" class="btn secondary btn-icon">
+                    ✏️ Modifier
                 </a>
                 {% if record['LAT'] and record['LONG'] %}
-                <button type="button" onclick="openOnMap('{{ record['LAT'] }}','{{ record['LONG'] }}','{{ record['TYPE']|e }}')" style="padding: 0.3em 0.6em; border-radius: 6px; border: 1px solid #3a6ea5; background: #0f1a25; color: #cfe0f3; cursor: pointer;">
-                  Voir
+                <button type="button" class="btn secondary btn-icon" onclick="openOnMap('{{ record['LAT'] }}','{{ record['LONG'] }}','{{ record['TYPE']|e }}')">
+                  🗺️ Voir
                 </button>
                 {% endif %}
             </td>

@@ -10,7 +10,19 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
     <style>
       .flash-container { margin: 1rem 0; }
-      .flash { padding: 0.6rem; border-radius: 4px; margin-bottom: 0.5rem; }
+      .flash {
+        padding: 0.6rem;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+        opacity: 1;
+        transition: opacity 1s ease;
+        animation: flashFadeOut 5s forwards;
+      }
+      @keyframes flashFadeOut {
+        0% { opacity: 1; }
+        80% { opacity: 1; }
+        100% { opacity: 0; visibility: hidden; }
+      }
       .flash.success { background: #1f6f43; }
       .flash.danger { background: #7f1d1d; }
       .flash.warning { background: #7f5300; }
@@ -47,6 +59,8 @@
       }
       .user-menu li { margin-bottom: 0.4rem; }
       .user-menu li:last-child { margin-bottom: 0; }
+
+      /* Page-level styles kept minimal; component styles live in dark.min.css */
     </style>
 </head>
 <body>
@@ -104,13 +118,28 @@
 
 {% block footer %}
 <footer>
-  <p style="text-align:center;">
+  <p class="text-center">
     <img src="{{ url_for('static', filename='images/qrcode.png') }}" alt="QR code pour enregistrer le site en favori" height="64" width="64">
   </p>
   <p>Carto folium par Francis.</p>
   <p><a href="http://popeye.mine.nu">http://popeye.mine.nu</a></p>
 </footer>
 {% endblock %}
+<script>
+  (function () {
+    const container = document.querySelector('.flash-container');
+    if (!container) return;
+    const flashes = container.querySelectorAll('.flash');
+    flashes.forEach((el) => {
+      // Remove when CSS animation completes
+      el.addEventListener('animationend', () => el.remove(), { once: true });
+      // Fallback in case animations are unsupported
+      setTimeout(() => {
+        if (el && el.parentNode) el.remove();
+      }, 6000);
+    });
+  })();
+</script>
 {% block extra_scripts %}{% endblock %}
 </body>
 </html>

@@ -38,8 +38,8 @@
     {% endfor %}
 
     <div class="actions">
-      <button type="submit">Sauvegarder</button>
-      <a class="secondary" href="{{ url_for('edit_sites.list_records') }}">Retour</a>
+      <button type="submit" class="btn primary btn-icon">💾 Enregistrer</button>
+      <a class="btn secondary btn-icon" href="{{ url_for('edit_sites.list_records') }}">↩ Annuler</a>
     </div>
   </form>
 
@@ -103,6 +103,14 @@
     font-weight: 600;
     cursor: pointer;
   }
+
+  .actions button,
+  .actions .secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .btn-icon { display: inline-flex; align-items: center; gap: 0.4rem; }
 
   .actions button:hover {
     background: #15212c;

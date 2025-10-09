@@ -26,8 +26,8 @@
     </div>
 
     <div class="actions">
-      <button type="submit">Envoyer</button>
-      <a class="secondary" href="{{ url_for('notif.view_notifications') }}">&larr; Retour</a>
+      <button type="submit" class="btn primary btn-icon">✉️ Envoyer</button>
+      <a class="btn secondary btn-icon" href="{{ url_for('notif.view_notifications') }}">↩ Retour</a>
     </div>
   </form>
 </section>
@@ -80,6 +80,8 @@
     align-items: center;
   }
 
+  .actions button,
+  .actions .secondary { display: inline-flex; align-items: center; gap: 0.4rem; }
   .actions button {
     padding: 0.6rem 1.4rem;
     border-radius: 6px;
