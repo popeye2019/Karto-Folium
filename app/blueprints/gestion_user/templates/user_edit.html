@@ -26,10 +26,10 @@
             <button type="submit" class="btn primary btn-icon">💾 Enregistrer</button>
 
             <form method="POST" action="{{ url_for('users.delete_user', login=user['Login']) }}" style="display: inline;">
-                <button type="submit" class="btn danger btn-icon icon-delete" onclick="return confirm('Confirmer la suppression ?')">🗑️ Supprimer</button>
+                <button type="submit" class="btn danger btn-icon icon-delete" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
             </form>
 
-            <a href="{{ url_for('users.list_users') }}" class="btn secondary btn-icon icon-back">↩ Annuler</a>
+            <a href="{{ url_for('users.list_users') }}" class="btn secondary btn-icon icon-back">Annuler</a>
         </div>
     </form>
 

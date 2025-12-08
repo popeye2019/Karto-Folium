@@ -29,7 +29,7 @@ users_bp = Blueprint("users", __name__, template_folder="templates")
 
 @users_bp.route("/")
 @login_required
-@require_level(1)
+@require_level(5)
 def list_users():
     """Display the list of registered users."""
     users = load_json(USER_FILE)

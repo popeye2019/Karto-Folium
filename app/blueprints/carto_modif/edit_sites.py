@@ -142,7 +142,7 @@ def list_records():
 
 @edit_sites_bp.route("/edit/<int:record_index>", methods=["GET", "POST"])
 @login_required
-@require_level(1)
+@require_level(4)
 def edit_record(record_index: int):
     """Edit the site identified by ``record_index``."""
     data = load_data(DATA_FILE)
@@ -224,7 +224,7 @@ def edit_record(record_index: int):
 
 @edit_sites_bp.route("/add", methods=["GET", "POST"])
 @login_required
-@require_level(1)
+@require_level(4)
 def add_record():
     """Create a new site entry."""
     data = load_data(DATA_FILE)

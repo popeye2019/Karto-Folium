@@ -76,5 +76,65 @@
         "Date_connec": null,
         "Contrat": [],
         "id": "4302ed6c-fc9e-4dfa-9713-beb2598afd7c"
+    },
+    {
+        "Nom": "USER1",
+        "Prenom": "USER1",
+        "Login": "USER1",
+        "Mot de passe": "scrypt:32768:8:1$oYVJkWMxxs2yUGJS$db3e56d36e9abb31a13cdc05d7cc6e36b0c74809927afac8195a62d4e1dbace1d50c6ce44df40b2c1891d6b4e55c8f25824efaf274ee82fa275cdc6cdd3cec09",
+        "Niveau acces": 1,
+        "Notification": false,
+        "Email": "USER1@USER1.COM",
+        "Date_connec": null,
+        "Contrat": [],
+        "id": "68a4e4ff-7b56-45f0-8b0e-25d906bb8b3d"
+    },
+    {
+        "Nom": "USER2",
+        "Prenom": "USER2",
+        "Login": "USER2",
+        "Mot de passe": "scrypt:32768:8:1$vGsJMzxWzdB9UUXZ$2ad94c5a1d91c2a527a6f0baecdbd86756390d35266240def50a38f64181223417a0646413da9b00b92fabf819ee08d1287074903e0bc3ad6accec6ea2555f4a",
+        "Niveau acces": 2,
+        "Notification": false,
+        "Email": "USER2@USER2.COM",
+        "Date_connec": null,
+        "Contrat": [],
+        "id": "c07cd1e0-8f28-454b-be77-3dd468b27911"
+    },
+    {
+        "Nom": "USER3",
+        "Prenom": "USER3",
+        "Login": "USER3",
+        "Mot de passe": "scrypt:32768:8:1$4oqCac3edANxnqtw$e18a9fc37a4d88d2faddd8e98c4d325137be43db8872228fd4e6eeadde9a538a19261b9039f4315bce9b79179496344c7487494243d45aec4b442d567665d278",
+        "Niveau acces": 3,
+        "Notification": false,
+        "Email": "USER3@USER3.COM",
+        "Date_connec": null,
+        "Contrat": [],
+        "id": "2302afbf-3de9-4b2d-a84e-11800ec4b4b2"
+    },
+    {
+        "Nom": "USER4",
+        "Prenom": "USER4",
+        "Login": "USER4",
+        "Mot de passe": "scrypt:32768:8:1$szJxzKBvbnts2Cuw$da75effb07f1aa6b37060e1842350da586755506010758d2205515f1954fcf2a5015cc54f595ac70b964aff4de5136fec7ca1bb569062d990bf0005cdbf132b2",
+        "Niveau acces": 4,
+        "Notification": false,
+        "Email": "USER4@USER4.COM",
+        "Date_connec": null,
+        "Contrat": [],
+        "id": "087591bc-004a-4c59-9c77-ea4cad1afc19"
+    },
+    {
+        "Nom": "USER5",
+        "Prenom": "USER5",
+        "Login": "USER5",
+        "Mot de passe": "scrypt:32768:8:1$Kl5udsrX9LD03Fw4$13ef58b18c410793fd2c84bd511d4efbee120973a1e138fffa745b98efcd31e8aabddd60300f61e20f47114bd6980cc3bf260b9e56446570bdf66951793c7bf0",
+        "Niveau acces": 5,
+        "Notification": false,
+        "Email": "USER5@USER5.COM",
+        "Date_connec": null,
+        "Contrat": [],
+        "id": "1f740b4a-4217-4cc6-a4b2-b05b685c65ae"
     }
 ]

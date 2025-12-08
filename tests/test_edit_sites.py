@@ -115,3 +115,23 @@ def test_edit_record_normalizes_state(app, client, monkeypatch, tmp_path):
 
     saved = json.loads(data_file.read_text(encoding="utf-8"))
     assert saved[0]["ETAT"] == "HS"
+
+
+def test_add_record_requires_level_four(client):
+    with client.session_transaction() as session:
+        session["user"] = {"login": "low", "uuid": "u2", "access_level": 3}
+
+    response = client.get("/edit-sites/add")
+
+    assert response.status_code == 200
+    assert b"Niveau requis" in response.data
+
+
+def test_edit_record_requires_level_four(client):
+    with client.session_transaction() as session:
+        session["user"] = {"login": "low", "uuid": "u2", "access_level": 2}
+
+    response = client.get("/edit-sites/edit/0")
+
+    assert response.status_code == 200
+    assert b"Niveau requis" in response.data

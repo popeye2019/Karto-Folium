@@ -5,12 +5,14 @@
 {% block content %}
 <h2>Liste des sites</h2>
 
-<p><a href="{{ url_for('edit_sites.add_record') }}" class="btn primary btn-icon">➕ Ajouter un nouveau site</a></p>
+{% if user and user.access_level >= 4 %}
+<p><a href="{{ url_for('edit_sites.add_record') }}" class="btn primary btn-icon">Ajouter un nouveau site</a></p>
+{% endif %}
 
 {% if user and user.access_level >= 4 %}
 <form action="{{ url_for('edit_sites.regenerate_map') }}" method="post" class="u-my-1">
-  <button type="submit" class="btn primary btn-icon">🔄 Régénérer la carte</button>
-  <span class="hint">Génère app/static/global/ouvrages.html</span>
+  <button type="submit" class="btn primary btn-icon">Regenerer la carte</button>
+  <span class="hint">Genere app/static/global/ouvrages.html</span>
 </form>
 {% endif %}
 
@@ -42,12 +44,14 @@
             <td>{{ record['COMMUNE'] }}</td>
             <td>{{ record['TYPE'] }}</td>
             <td>
+                {% if user and user.access_level >= 4 %}
                 <a href="{{ url_for('edit_sites.edit_record', record_index=loop.index0) }}" class="btn secondary btn-icon">
-                    ✏️ Modifier
+                    Modifier
                 </a>
+                {% endif %}
                 {% if record['LAT'] and record['LONG'] %}
                 <button type="button" class="btn secondary btn-icon" onclick="openOnMap('{{ record['LAT'] }}','{{ record['LONG'] }}','{{ record['TYPE']|e }}')">
-                  🗺️ Voir
+                  Voir
                 </button>
                 {% endif %}
             </td>

@@ -15,7 +15,7 @@ DATA_FILE = "./app/data/users/droits.json"
 
 @rights_bp.route("/")
 @login_required
-@require_level(1)
+@require_level(5)
 def index():
     """List the access levels and their definitions."""
     data = read_json(DATA_FILE)

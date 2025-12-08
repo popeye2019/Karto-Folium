@@ -2,6 +2,8 @@
 {% block title %}Liste des niveaux de droits{% endblock %}
 {% block content %}
 <h1>Liste des niveaux</h1>
+<a href="{{ url_for('user_rights.add_right') }}" class="btn primary btn-icon">➕ Ajouter un droit</a>
+<hr>
 <table border="1">
     <thead>
         <tr>
@@ -29,6 +31,4 @@
         {% endfor %}
     </tbody>
 </table>
-<br>
-<a href="{{ url_for('user_rights.add_right') }}" class="btn primary btn-icon">➕ Ajouter un droit</a>
 {% endblock %}

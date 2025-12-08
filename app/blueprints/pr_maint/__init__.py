@@ -16,7 +16,7 @@ pr_maint_bp = Blueprint("pr_maint", __name__, template_folder="templates")
 
 RECUP_FILE = Path("./app/data/sites/recap.json")
 COMMENT_FILE = Path("./app/data/maintenance/commentaire.json")
-MAINTENANCE_ACCESS_LEVEL = 2
+MAINTENANCE_ACCESS_LEVEL = 3
 
 
 DISTANCE_THRESHOLD_METERS = 2000.0

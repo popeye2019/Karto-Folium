@@ -1,7 +1,7 @@
 [
     {
         "INDEX": "1",
-        "PPV": 0.0,
+        "PPV": "0",
         "COMMUNE": "ALLASSAC",
         "NOM": "Laval",
         "TYPE": "STEP",
@@ -3658,7 +3658,7 @@
     },
     {
         "INDEX": "160",
-        "PPV": 0.0,
+        "PPV": "0.0",
         "COMMUNE": "MALEMORT",
         "NOM": "de la ZA du Moulin",
         "TYPE": "PR",

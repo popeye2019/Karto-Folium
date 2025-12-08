@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}📋Liste des utilisateurs{% endblock %}
+{% block title %}Liste des utilisateurs{% endblock %}
 
 {% block content %}
 <body>
     <h1>Liste des utilisateurs</h1>
+    {% if user_level == 5 %}
+    <p><a href="{{ url_for('users.add_user') }}" class="btn primary btn-icon">➕Ajouter un utilisateur</a></p>
+    {% endif %}
     <table border="1">
         <thead>
             <tr>
@@ -25,14 +28,11 @@
                 <td>{{ user["Email"] }}</td>
                 {% if user_level == 5 %}
                 <td>{{ user["Login"] }}</td>
-                <td><a href="{{ url_for('users.edit_user', login=user['Login']) }}" class="btn secondary btn-icon">✏️ Modifier</a></td
-                {% endif %}>
+                <td><a href="{{ url_for('users.edit_user', login=user['Login']) }}" class="btn secondary btn-icon">Modifier</a></td>
+                {% endif %}
             </tr>
             {% endfor %}
         </tbody>
     </table>
-            {% if user_level == 5 %}
-            <a href="{{ url_for('users.add_user') }}" class="btn primary btn-icon">➕ Ajouter un utilisateur</a>
-            {% endif %}
 
     {% endblock %}

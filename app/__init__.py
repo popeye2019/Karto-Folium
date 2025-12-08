@@ -65,6 +65,7 @@ def _register_context_processors(app: Flask) -> None:
         """Make session user, notification count, and app version available."""
         user = session.get("user")
         notif_count = 0
+        access_definition: str | None = None
 
         if user:
             user_uuid = user.get("uuid")
@@ -85,11 +86,33 @@ def _register_context_processors(app: Flask) -> None:
                     if str(notif.get("recipient_id")) == str(user_uuid)
                     and not notif.get("is_read")
                 )
+            # Resolve the textual definition for the user's access level, if available.
+            try:
+                rights = load_json_file("./app/data/users/droits.json")
+            except FileNotFoundError:
+                rights = []
+            except Exception:  # pragma: no cover - defensive
+                rights = []
+            user_level = user.get("access_level")
+            if isinstance(rights, list) and user_level is not None:
+                try:
+                    level_int = int(user_level)
+                except (TypeError, ValueError):
+                    level_int = None
+                if level_int is not None:
+                    for item in rights:
+                        if (
+                            isinstance(item, dict)
+                            and int(item.get("Niveau", -1)) == level_int
+                        ):
+                            access_definition = item.get("Definition")
+                            break
 
         return {
             "user": user,
             "notif_count": notif_count,
             "app_version": app.config.get("APP_VERSION"),
+            "user_access_definition": access_definition,
         }
 
 
