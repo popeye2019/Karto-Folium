@@ -6,13 +6,13 @@
 <body>
     <h1>Liste des utilisateurs</h1>
     {% if user_level == 5 %}
-    <p><a href="{{ url_for('users.add_user') }}" class="btn primary btn-icon">➕Ajouter un utilisateur</a></p>
+    <p><a href="{{ url_for('users.add_user') }}" class="btn primary btn-icon">&#x2795; Ajouter un utilisateur</a></p>
     {% endif %}
     <table border="1">
         <thead>
             <tr>
                 <th>Nom</th>
-                <th>Prénom</th>
+                <th>Prenom</th>
                 <th>Email</th>
                 {% if user_level == 5 %}
                 <th>Login</th>
@@ -34,5 +34,22 @@
             {% endfor %}
         </tbody>
     </table>
+
+    {% if user_level == 5 %}
+    <div class="card" style="margin-top: 0.75rem; padding: 0.75rem 1rem;">
+        <h2 style="margin: 0 0 0.25rem 0; font-size: 1.1rem;">Administration des donnees</h2>
+        <p style="margin: 0 0 0.5rem 0; font-size: 0.95rem;">
+            Telecharger une sauvegarde du dossier <code>app/data</code> ou restaurer depuis un fichier .zip.
+        </p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+            <a href="{{ url_for('users.download_backup') }}" class="btn secondary btn-icon">&#8681; Telecharger la sauvegarde</a>
+            <form action="{{ url_for('users.restore_backup') }}" method="post" enctype="multipart/form-data" style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin: 0;">
+                <label for="backup_file" style="margin: 0;">Restaurer (.zip)</label>
+                <input type="file" id="backup_file" name="file" accept=".zip" required>
+                <button type="submit" class="btn primary btn-icon">&#8635; Restaurer</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
 
     {% endblock %}

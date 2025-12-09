@@ -3,15 +3,21 @@
 from __future__ import annotations
 
 import uuid
+import io
+import zipfile
+from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 from flask import (
     Blueprint,
     current_app,
+    flash,
     redirect,
     render_template,
     request,
     session,
+    send_file,
     url_for,
 )
 from werkzeug.security import generate_password_hash
@@ -25,6 +31,10 @@ SAVE_USERS_FILE = "./app/data/users/users.json"
 RIGHTS_FILE = "./app/data/users/droits.json"
 
 users_bp = Blueprint("users", __name__, template_folder="templates")
+
+def _data_dir() -> Path:
+    """Absolute path to the data directory."""
+    return Path(current_app.root_path) / "data"
 
 
 @users_bp.route("/")
@@ -142,3 +152,79 @@ def edit_right(level: int):
         return redirect(url_for("users.list_rights"))
 
     return render_template("edit_right.html", right=entry)
+
+
+@users_bp.route("/backup/download", methods=["GET"])
+@login_required
+@require_level(5)
+def download_backup():
+    """Build a zip of app/data and send it to the administrator."""
+    data_dir = _data_dir()
+    buffer = io.BytesIO()
+
+    with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        if data_dir.exists():
+            for path in data_dir.rglob("*"):
+                if path.is_file():
+                    arcname = Path("data") / path.relative_to(data_dir)
+                    archive.write(path, arcname)
+
+    buffer.seek(0)
+    timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+    return send_file(
+        buffer,
+        mimetype="application/zip",
+        as_attachment=True,
+        download_name=f"karto-data-backup-{timestamp}.zip",
+    )
+
+
+@users_bp.route("/backup/restore", methods=["POST"])
+@login_required
+@require_level(5)
+def restore_backup():
+    """Restore app/data from an uploaded zip archive."""
+    upload = request.files.get("file")
+
+    if not upload or upload.filename == "":
+        flash("Aucun fichier .zip fourni.", "warning")
+        return redirect(url_for("users.list_users"))
+
+    data_dir = _data_dir()
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        with zipfile.ZipFile(upload) as archive:
+            base = data_dir.resolve()
+            for member in archive.infolist():
+                # Skip directories; we create them as needed.
+                if member.is_dir():
+                    continue
+
+                member_path = Path(member.filename)
+                parts = list(member_path.parts)
+                # Allow archives that include a top-level "data" folder or not.
+                if parts and parts[0].lower() == "data":
+                    parts = parts[1:]
+
+                if not parts:
+                    continue
+
+                target_path = (base / Path(*parts)).resolve()
+                try:
+                    target_path.relative_to(base)
+                except ValueError:
+                    raise ValueError("Chemin d'extraction non autorise dans l'archive.")
+
+                target_path.parent.mkdir(parents=True, exist_ok=True)
+                with archive.open(member, "r") as source, open(target_path, "wb") as dest:
+                    dest.write(source.read())
+
+        flash("Sauvegarde restauree avec succes.", "success")
+    except zipfile.BadZipFile:
+        flash("Le fichier fourni n'est pas une archive ZIP valide.", "danger")
+    except Exception as exc:  # pragma: no cover - defensive logging
+        current_app.logger.exception("Echec de la restauration des donnees: %s", exc)
+        flash("Echec de la restauration des donnees.", "danger")
+
+    return redirect(url_for("users.list_users"))

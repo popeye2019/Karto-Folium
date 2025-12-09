@@ -3,7 +3,17 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import Any, Iterable
+
+# Base directory of the project (repository root).
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+
+def _resolve_path(filepath: str | Path) -> Path:
+    """Return an absolute path, resolving relative paths against the app root."""
+    path = Path(filepath)
+    return path if path.is_absolute() else BASE_DIR / path
 
 
 def get_field_names(json_data: Any) -> list[str]:
@@ -42,33 +52,35 @@ def add_record(base: list[dict[str, Any]], new_record: dict[str, Any]) -> list[d
 
 def load_json_file(filepath: str) -> Any:
     """Read a JSON file and return its content."""
+    path = _resolve_path(filepath)
     try:
-        with open(filepath, "r", encoding="utf-8") as file:
+        with path.open("r", encoding="utf-8") as file:
             data = json.load(file)
-        print(f"File loaded successfully: {filepath}")
+        print(f"File loaded successfully: {path}")
         return data
     except FileNotFoundError:
-        print(f"Error: file not found -> {filepath}")
+        print(f"Error: file not found -> {path}")
         raise
     except json.JSONDecodeError as exc:
-        print(f"JSON format error for {filepath}: {exc}")
+        print(f"JSON format error for {path}: {exc}")
         raise
     except Exception as exc:  # pragma: no cover - defensive logging
-        print(f"Unexpected error while reading {filepath}: {exc}")
+        print(f"Unexpected error while reading {path}: {exc}")
         raise
 
 
 def save_json_file(filepath: str, data: Any) -> None:
     """Persist JSON data to the specified filepath."""
+    path = _resolve_path(filepath)
     try:
-        with open(filepath, "w", encoding="utf-8") as file:
+        with path.open("w", encoding="utf-8") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
-        print(f"File saved successfully: {filepath}")
+        print(f"File saved successfully: {path}")
     except OSError as exc:
-        print(f"Error while saving {filepath}: {exc}")
+        print(f"Error while saving {path}: {exc}")
         raise
     except Exception as exc:  # pragma: no cover - defensive logging
-        print(f"Unexpected error while saving {filepath}: {exc}")
+        print(f"Unexpected error while saving {path}: {exc}")
         raise
 
 
