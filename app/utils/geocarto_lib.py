@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 import json
 from pathlib import Path
 from typing import Tuple, Optional
@@ -34,7 +35,7 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_ICON_NAME = "compteur.png"
 BASE_ICON_SIZE: Tuple[int, int] = (50, 50)
 ICON_CACHE: dict[str, str] = {}
-URL_OUVRAGE = "https://popeye.mine.nu/aqwzsx123/pdf/ouvrages/"
+DEFAULT_URL_OUVRAGE = "https://popeye.mine.nu/aqwzsx123/pdf/ouvrages/"
 
 
 def parse_float(value, default=None):
@@ -89,6 +90,20 @@ def compute_icon_size(meta: TypeMetadata | None) -> tuple[int, int]:
     width = max(12, int(BASE_ICON_SIZE[0] * scale))
     height = max(12, int(BASE_ICON_SIZE[1] * scale))
     return (width, height)
+
+
+def _get_ouvrage_base_url() -> str:
+    """Return the base URL for documentation links (env or Flask config)."""
+    try:
+        from flask import current_app
+
+        cfg_val = current_app.config.get("URL_OUVRAGE")  # type: ignore[attr-defined]
+        if cfg_val:
+            return str(cfg_val).rstrip("/") + "/"
+    except Exception:
+        # No app context or Flask not installed in this context.
+        pass
+    return os.getenv("URL_OUVRAGE", DEFAULT_URL_OUVRAGE).rstrip("/") + "/"
 
 
 @dataclass
@@ -289,7 +304,7 @@ def generate_map(
         ouvrage_documentation = elem.get("DOCUMENTATION", "")
         balise_html = "<br></code></p> "
         if ouvrage_documentation:
-            documentation_url = URL_OUVRAGE + str(ouvrage_documentation)
+            documentation_url = _get_ouvrage_base_url() + str(ouvrage_documentation).lstrip("/")
             balise_html = f"<br><a href=\" {documentation_url} \" target=\"_blank\">documentation </a><br></code></p> "
 
         generate_coordinate = f"{temp1},{temp2}/@{temp1},{temp2},17z"

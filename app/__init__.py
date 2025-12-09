@@ -9,7 +9,8 @@ from flask import Flask, session
 
 NOTIFICATION_STORE = "./app/blueprints/notif/notifications.json"
 DEFAULT_SITE_ETATS = ("ES", "HS")
-
+DEFAULT_URL_OUVRAGE = "https://karto.mine.nu/static/ouvrages/"
+SUFFIXE_APP_VERSION = "V1.0.0"
 
 def create_app(config_object: str | object = "config.Config") -> Flask:
     """Create, configure, and return the Flask application instance."""
@@ -18,13 +19,24 @@ def create_app(config_object: str | object = "config.Config") -> Flask:
 
     app.config.setdefault("APP_VERSION", os.getenv("APP_VERSION", "Karto-Folium-dev"))
     app.config.setdefault("NOTIFICATION_STORE", NOTIFICATION_STORE)
-    app.config.setdefault("SITE_ETATS", DEFAULT_SITE_ETATS)
+    app.config["SITE_ETATS"] = _load_site_states()
+    app.config.setdefault("URL_OUVRAGE", os.getenv("URL_OUVRAGE", DEFAULT_URL_OUVRAGE))
 
     _register_blueprints(app)
     _register_context_processors(app)
     _register_filters(app)
 
     return app
+
+
+def _load_site_states() -> tuple[str, ...]:
+    """Read SITE_ETATS from env (comma-separated) with a safe fallback."""
+    raw = os.getenv("SITE_ETATS")
+    if not raw:
+        return DEFAULT_SITE_ETATS
+
+    states = tuple(value.strip() for value in raw.split(",") if value.strip())
+    return states or DEFAULT_SITE_ETATS
 
 
 def _register_blueprints(app: Flask) -> None:
