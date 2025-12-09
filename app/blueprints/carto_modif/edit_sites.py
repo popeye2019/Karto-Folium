@@ -326,6 +326,7 @@ def regenerate_map():
         app_dir = Path(current_app.root_path)
         output_path = app_dir / "static" / "global" / "ouvrages.html"
         output_path.parent.mkdir(parents=True, exist_ok=True)
+        current_app.logger.info("Regenerate map requested: output=%s", output_path)
         generate_map(output_path)
     except Exception as exc:  # pragma: no cover
         current_app.logger.exception("Map generation failed: %s", exc)

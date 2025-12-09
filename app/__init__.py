@@ -7,9 +7,9 @@ from datetime import datetime
 
 from flask import Flask, session
 
-NOTIFICATION_STORE = "./app/blueprints/notif/notifications.json"
+NOTIFICATION_STORE = "./app/data/notif/notifications.json"
 DEFAULT_SITE_ETATS = ("ES", "HS")
-DEFAULT_URL_OUVRAGE = "https://karto.mine.nu/static/ouvrages/"
+DEFAULT_URL_OUVRAGE = "/static/ouvrages/"
 SUFFIXE_APP_VERSION = "V1.0.0"
 
 def create_app(config_object: str | object = "config.Config") -> Flask:
@@ -17,7 +17,10 @@ def create_app(config_object: str | object = "config.Config") -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_object)
 
-    app.config.setdefault("APP_VERSION", os.getenv("APP_VERSION", "Karto-Folium-dev"))
+    app.config.setdefault(
+        "APP_VERSION",
+        f"{os.getenv('APP_VERSION', 'Karto-Folium-dev')} {SUFFIXE_APP_VERSION}",
+    )
     app.config.setdefault("NOTIFICATION_STORE", NOTIFICATION_STORE)
     app.config["SITE_ETATS"] = _load_site_states()
     app.config.setdefault("URL_OUVRAGE", os.getenv("URL_OUVRAGE", DEFAULT_URL_OUVRAGE))

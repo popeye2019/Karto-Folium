@@ -22,7 +22,7 @@ from app.utils.utils_json import load_json_file as load_json
 from app.utils.utils_json import save_json_file as save_json
 
 USER_FILE = "./app/data/users/users.json"
-NOTIFICATION_FILE = "./app/blueprints/notif/notifications.json"
+NOTIFICATION_FILE = "./app/data/notif/notifications.json"
 
 notif_bp = Blueprint("notif", __name__, template_folder="templates")
 
