@@ -34,7 +34,7 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_ICON_NAME = "compteur.png"
 BASE_ICON_SIZE: Tuple[int, int] = (50, 50)
 ICON_CACHE: dict[str, str] = {}
-URL_OUVRAGE = "https://popeye.mine.nu/aqwzsx123/pdf/ouvrages/"
+URL_OUVRAGE = "https://karto.mine.nu/static/ouvrages/"
 
 
 def parse_float(value, default=None):
