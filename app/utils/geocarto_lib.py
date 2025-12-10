@@ -1,14 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-import logging
-import os
 import json
 from pathlib import Path
-import difflib
-import unicodedata
 from typing import Tuple, Optional
-from urllib.parse import quote
 
 import folium
 from folium import FeatureGroup, LayerControl, Marker
@@ -39,8 +34,7 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_ICON_NAME = "compteur.png"
 BASE_ICON_SIZE: Tuple[int, int] = (50, 50)
 ICON_CACHE: dict[str, str] = {}
-DEFAULT_URL_OUVRAGE = "/static/ouvrages/"
-logger = logging.getLogger(__name__)
+URL_OUVRAGE = "https://popeye.mine.nu/aqwzsx123/pdf/ouvrages/"
 
 
 def parse_float(value, default=None):
@@ -95,45 +89,6 @@ def compute_icon_size(meta: TypeMetadata | None) -> tuple[int, int]:
     width = max(12, int(BASE_ICON_SIZE[0] * scale))
     height = max(12, int(BASE_ICON_SIZE[1] * scale))
     return (width, height)
-
-
-def _get_ouvrage_base_url() -> str:
-    """Return the base URL for documentation links (env or Flask config)."""
-    try:
-        from flask import current_app
-
-        cfg_val = current_app.config.get("URL_OUVRAGE")  # type: ignore[attr-defined]
-        if cfg_val:
-            return str(cfg_val).rstrip("/") + "/"
-    except Exception:
-        # No app context or Flask not installed in this context.
-        pass
-    return os.getenv("URL_OUVRAGE", DEFAULT_URL_OUVRAGE).rstrip("/") + "/"
-
-
-def _normalize_filename(value: str) -> str:
-    """Return a lowercase, accent-stripped, alnum-only name for fuzzy matching."""
-    normalized = unicodedata.normalize("NFD", value)
-    stripped = "".join(ch for ch in normalized if unicodedata.category(ch) != "Mn")
-    return "".join(ch for ch in stripped.lower() if ch.isalnum())
-
-
-def _find_matching_doc(doc_name: str) -> Path | None:
-    """Try to find a best-effort match for the documentation file in static/ouvrages."""
-    target_dir = BASE_DIR / "static" / "ouvrages"
-    if not target_dir.exists():
-        return None
-
-    wanted = _normalize_filename(Path(doc_name).name)
-    candidates = { _normalize_filename(p.name): p for p in target_dir.iterdir() if p.is_file() }
-    if wanted in candidates:
-        return candidates[wanted]
-
-    # Fallback fuzzy match (handles small typos like "n2" vs "n°2" or missing accents)
-    close = difflib.get_close_matches(wanted, candidates.keys(), n=1, cutoff=0.7)
-    if close:
-        return candidates[close[0]]
-    return None
 
 
 @dataclass
@@ -209,9 +164,6 @@ def generate_map(
     Retour:
       - Path absolu du fichier généré.
     """
-    base_doc_url = _get_ouvrage_base_url()
-    logger.info("Map generation: output=%s base_doc_url=%s", output_path, base_doc_url)
-
     # Centre par défaut
     lat0 = float(lat) if lat is not None else 45.148537
     lon0 = float(lon) if lon is not None else 1.463
@@ -290,7 +242,6 @@ def generate_map(
     disabled_types = {key for key, meta in type_metadata.items() if not meta.enabled}
     logged_disabled: set[str] = set()
     logged_unknown: set[str] = set()
-    missing_docs: set[str] = set()
     for elem in liste_ouvrages:
         # Filtre: masquer les sites hors service
         etat = str(elem.get("ETAT", "")).strip().upper()
@@ -338,21 +289,8 @@ def generate_map(
         ouvrage_documentation = elem.get("DOCUMENTATION", "")
         balise_html = "<br></code></p> "
         if ouvrage_documentation:
-            doc_name = str(ouvrage_documentation).lstrip("/")
-            documentation_url = base_doc_url + quote(Path(doc_name).name)
-            if base_doc_url.startswith("/static/"):
-                candidate = BASE_DIR / "static" / "ouvrages" / Path(doc_name).name
-                if not candidate.exists():
-                    # Try fuzzy match (handle n° vs n2, accents, etc.)
-                    match = _find_matching_doc(doc_name)
-                    if match:
-                        doc_name = match.name
-                        documentation_url = base_doc_url + quote(match.name)
-                        logger.info("Documentation file remapped to %s", match)
-                    elif doc_name not in missing_docs:
-                        missing_docs.add(doc_name)
-                        logger.warning("Documentation file missing: %s (expected at %s)", doc_name, candidate)
-            balise_html = f"<br><a href=\"{documentation_url}\" target=\"_blank\">documentation</a><br></code></p> "
+            documentation_url = URL_OUVRAGE + str(ouvrage_documentation)
+            balise_html = f"<br><a href=\" {documentation_url} \" target=\"_blank\">documentation </a><br></code></p> "
 
         generate_coordinate = f"{temp1},{temp2}/@{temp1},{temp2},17z"
         html_ouvrage = (
