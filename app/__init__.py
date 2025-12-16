@@ -10,7 +10,7 @@ from flask import Flask, session
 NOTIFICATION_STORE = "./app/data/notif/notifications.json"
 DEFAULT_SITE_ETATS = ("ES", "HS")
 DEFAULT_URL_OUVRAGE = "/static/ouvrages/"
-SUFFIXE_APP_VERSION = "V1.0.0"
+SUFFIXE_APP_VERSION = "V0.1"
 
 def create_app(config_object: str | object = "config.Config") -> Flask:
     """Create, configure, and return the Flask application instance."""

@@ -16,18 +16,6 @@
 </form>
 {% endif %}
 
-<!-- Filtres -->
-<div style="margin: 1em 0; display: flex; gap: 1em; flex-wrap: wrap;">
-    <input type="text" id="filterNom" placeholder="Nom" onkeyup="filterTable()" style="padding: 0.5em;">
-    <input type="text" id="filterCommune" placeholder="Commune" onkeyup="filterTable()" style="padding: 0.5em;">
-    <select id="filterTypeSelect" onchange="filterTable()" style="padding: 0.5em;">
-        <option value="">Tous les types</option>
-        {% for t in types %}
-        <option value="{{ t }}">{{ t }}</option>
-        {% endfor %}
-    </select>
-</div>
-
 <table id="siteTable" style="width: 100%; border-collapse: collapse; margin-top: 1em;">
     <thead>
         <tr style="background-color: #222; color: #fff; cursor: pointer;">
@@ -35,6 +23,23 @@
             <th onclick="sortTable(1)">Commune</th>
             <th onclick="sortTable(2)">Type</th>
             <th>Action</th>
+        </tr>
+        <tr class="filter-row">
+            <th>
+                <input type="text" id="filterNom" placeholder="Nom" onkeyup="filterTable()" class="filter-input">
+            </th>
+            <th>
+                <input type="text" id="filterCommune" placeholder="Commune" onkeyup="filterTable()" class="filter-input">
+            </th>
+            <th>
+                <select id="filterTypeSelect" onchange="filterTable()" class="filter-input">
+                    <option value="">Tous les types</option>
+                    {% for t in types %}
+                    <option value="{{ t }}">{{ t }}</option>
+                    {% endfor %}
+                </select>
+            </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -63,6 +68,22 @@
 <style>
 .row-even { background-color: #2a2a2a; }
 .row-odd  { background-color: #1d1d1d; }
+.filter-row th {
+  background-color: #1a1a1a;
+  padding: 0.5em;
+}
+.filter-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.45em 0.5em;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: #0f0f0f;
+  color: #eee;
+}
+.filter-input:focus {
+  outline: 1px solid #5f9eff;
+}
 </style>
 
 <script>

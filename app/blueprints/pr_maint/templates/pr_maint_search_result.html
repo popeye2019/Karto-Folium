@@ -31,11 +31,16 @@
             <td>{{ site.COMMUNE }}</td>
             <td>{{ '%.1f'|format(site.distance) }}</td>
             <td>
-              <form method="post" action="{{ url_for('pr_maint.create_intervention') }}">
-                <input type="hidden" name="emplacement" value="{{ site.INDEX }}">
-                <input type="hidden" name="site_label" value="{{ site.NOM }} ({{ site.COMMUNE }})">
-                <button type="submit" class="btn">Créer une intervention</button>
-              </form>
+              <button
+                type="button"
+                class="btn open-modal"
+                data-emplacement="{{ site.INDEX }}"
+                data-label="{{ site.NOM }} ({{ site.COMMUNE }})"
+                data-site="{{ site.NOM }}"
+                data-commune="{{ site.COMMUNE }}"
+              >
+                Créer une intervention
+              </button>
             </td>
           </tr>
           {% endfor %}
@@ -72,6 +77,25 @@
     <a class="btn secondary" href="{{ url_for('pr_maint.localisation_page') }}">Nouvelle localisation</a>
     <a class="btn secondary" href="{{ url_for('pr_maint.maintenance_home') }}">Retour Maintenance</a>
   </div>
+
+  <div id="interventionModal" class="modal hidden">
+    <div class="modal__content">
+      <h3>Saisir une intervention</h3>
+      <p class="modal__context">Site sélectionné : <span id="modalSite">-</span></p>
+      <form method="post" action="{{ url_for('pr_maint.create_intervention') }}" id="modalForm">
+        <input type="hidden" name="emplacement" id="modalEmplacement">
+        <input type="hidden" name="site_label" id="modalSiteLabel">
+        <label>
+          <span>Commentaire *</span>
+          <textarea name="commentaire" id="modalComment" rows="4" required placeholder="Décrivez l'intervention..."></textarea>
+        </label>
+        <div class="modal__actions">
+          <button type="submit" class="btn primary">OK</button>
+          <button type="button" class="btn secondary" id="modalCancel">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </section>
 
 <style>
@@ -86,5 +110,55 @@
   .actions { margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; }
   .quick-intervention { margin-top: 1.2rem; display: flex; flex-direction: column; gap: 0.6rem; }
   .quick-intervention textarea { resize: vertical; min-height: 120px; padding: 0.6rem 0.8rem; border-radius: 8px; border: 1px solid #2b3947; background: #0f1a26; color: #fff; }
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; padding: 1rem; z-index: 999; }
+  .modal.hidden { display: none; }
+  .modal__content { background: #0f1a26; border: 1px solid #1f2d3c; border-radius: 12px; padding: 1.5rem; width: min(520px, 100%); box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
+  .modal__context { color: #9fb3c8; margin: 0.4rem 0 1rem; }
+  #modalForm { display: flex; flex-direction: column; gap: 0.8rem; }
+  #modalForm label { display: flex; flex-direction: column; gap: 0.4rem; color: #d6e3f5; }
+  #modalComment { resize: vertical; min-height: 120px; padding: 0.6rem 0.8rem; border-radius: 8px; border: 1px solid #2b3947; background: #101820; color: #fff; }
+  .modal__actions { display: flex; gap: 0.8rem; justify-content: flex-end; flex-wrap: wrap; }
 </style>
+
+<script>
+  (function() {
+    const modal = document.getElementById('interventionModal');
+    const modalSite = document.getElementById('modalSite');
+    const modalEmplacement = document.getElementById('modalEmplacement');
+    const modalSiteLabel = document.getElementById('modalSiteLabel');
+    const modalComment = document.getElementById('modalComment');
+    const modalCancel = document.getElementById('modalCancel');
+
+    function openModal({ emplacement, label, site, commune }) {
+      modalEmplacement.value = emplacement || '';
+      modalSiteLabel.value = label || '';
+      modalSite.textContent = site ? `${site} - ${commune || ''}` : label || 'Aucun';
+      modal.classList.remove('hidden');
+      modalComment.value = '';
+      modalComment.focus();
+    }
+
+    function closeModal() {
+      modal.classList.add('hidden');
+    }
+
+    document.querySelectorAll('.open-modal').forEach(btn => {
+      btn.addEventListener('click', () => {
+        openModal({
+          emplacement: btn.dataset.emplacement,
+          label: btn.dataset.label,
+          site: btn.dataset.site,
+          commune: btn.dataset.commune,
+        });
+      });
+    });
+
+    modalCancel.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+  })();
+</script>
 {% endblock %}

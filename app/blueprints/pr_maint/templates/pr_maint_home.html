@@ -44,26 +44,10 @@
       <p class="value">{{ site_count }}</p>
       <p class="hint">Nombre total d'entrées dans le fichier recap.json.</p>
     </div>
-  </div>
-
-  <div class="search-panel">
-    <div class="filters">
-      <label>
-        <span>Filtrer par type</span>
-        <select id="filterType">
-          <option value="">Tous</option>
-        </select>
-      </label>
-      <label>
-        <span>Filtrer par commune</span>
-        <select id="filterCommune">
-          <option value="">Toutes</option>
-        </select>
-      </label>
-      <label>
-        <span>Rechercher par nom</span>
-        <input type="text" id="filterNom" placeholder="Nom du site" autocomplete="off">
-      </label>
+    <div class="card card-actions">
+      <h3>Recherche proximité</h3>
+      <p class="hint">Trouver les sites proches avec la position du téléphone.</p>
+      <a class="gps-btn" href="{{ url_for('pr_maint.localisation_page') }}">📍 Recherche GPS</a>
     </div>
   </div>
 
@@ -75,6 +59,25 @@
           <th>Nom</th>
           <th>Commune</th>
           <th>Intervention</th>
+        </tr>
+        <tr class="filter-row">
+          <th>
+            <label class="visually-hidden" for="filterType">Filtrer par type</label>
+            <select id="filterType" class="filter-input">
+              <option value="">Tous</option>
+            </select>
+          </th>
+          <th>
+            <label class="visually-hidden" for="filterNom">Rechercher par nom</label>
+            <input type="text" id="filterNom" placeholder="Nom du site" autocomplete="off" class="filter-input">
+          </th>
+          <th>
+            <label class="visually-hidden" for="filterCommune">Filtrer par commune</label>
+            <select id="filterCommune" class="filter-input">
+              <option value="">Toutes</option>
+            </select>
+          </th>
+          <th aria-hidden="true"></th>
         </tr>
       </thead>
       <tbody>
@@ -138,13 +141,30 @@
   .recent-comments__content p { margin: 0; }
   .summary { margin: 2rem 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.2rem; }
   .summary .card { background: #172533; border-radius: 12px; padding: 1.2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.25); }
+  .summary .card.card-actions { display: flex; flex-direction: column; gap: 0.7rem; justify-content: center; }
   .summary .card h3 { margin: 0; font-size: 1.1rem; }
   .summary .card .value { font-size: 2.4rem; margin: 0.6rem 0 0; font-weight: 700; color: #4da3ff; }
   .summary .card .hint { margin-top: 0.6rem; color: #8fa3bb; font-size: 0.9rem; }
-  .search-panel { margin-bottom: 1.5rem; }
-  .filters { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; }
-  .filters label { display: flex; flex-direction: column; gap: 0.4rem; color: #d6e3f5; font-size: 0.95rem; }
-  .filters input, .filters select { padding: 0.55rem 0.8rem; border-radius: 6px; border: 1px solid #2b3947; background: #101820; color: #fff; min-width: 200px; }
+  .summary .gps-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #1b6ef3, #2c7fff);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    border: 1px solid #2c7fff;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  .summary .gps-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.25); }
+  .filter-row th { background: #122131; padding: 0.5rem 0.6rem; }
+  .filter-input { width: 100%; box-sizing: border-box; padding: 0.5rem 0.6rem; border-radius: 6px; border: 1px solid #2b3947; background: #0d1721; color: #fff; }
+  .filter-input:focus { outline: 1px solid #3a6df0; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
   .table-wrapper { overflow-x: auto; }
   .maintenance-table { width: 100%; border-collapse: collapse; }
   .maintenance-table th, .maintenance-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid #203244; text-align: left; }

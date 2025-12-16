@@ -61,6 +61,14 @@
       .user-menu li:last-child { margin-bottom: 0; }
 
       /* Page-level styles kept minimal; component styles live in dark.min.css */
+      .header-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .header-brand img {
+        display: block;
+      }
     </style>
 </head>
 <body>
@@ -72,7 +80,7 @@
         <li>{% block title %} pas de lien {% endblock %}</li>
       </ul>
     </div>
-    <div class="column">
+    <div class="column header-brand">
       <img src="{{ url_for('static', filename='images/krto_logo.webp') }}" alt="Logo du site carto folium" height="64" width="64">
       KRTO: {{ app_version }}
     </div>
