@@ -181,3 +181,9 @@ cython_debug/
 .cursorindexingignore
 # Sensitive local documents
 app/static/ouvrages/
+app/data/A2I/A2I.json
+app/data/maintenance/
+app/data/notif/
+app/data/prmaint/
+app/data/sites/
+app/data/users/
