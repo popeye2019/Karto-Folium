@@ -1,20 +1,18 @@
- <!DOCTYPE html>
+{% extends "base.html" %}
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/dark.min.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
-<style contenteditable>
-  .brd {
-    border: 2px solid black;
-    border-color: #333;
-  }
-</style>
+{% block title %}
+    <a href="{{ url_for('auth.logout') }}" style="color: crimson; font-weight: bold;">🔒 Déconnexion
+    </a>
+{% endblock %}
 
-<html lang="fr">
-<meta charset="UTF-8">
-<title>Carto Folium Version 2.0</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="">
-<style>
+{% block content %}
+  
+      <h2>Bienvenue {{ client_ip or "Inconnu" }}, pour un accés, demandez à votre Administrateur.<br>Sinon Login et MDP</h2>
+
+  
+
+
+
 </style>
 <script src=""></script>
 <body>
@@ -26,7 +24,7 @@
         <label for="password">Mot de passe :</label>
         <input type="password" id="password" name="password" required><br><br>
         
-        <label><input type="checkbox" name="remember_me"> Se souvenir de moi</label><br><br>
+        <!--<label><input type="checkbox" name="remember_me"> Se souvenir de moi</label><br><br>-->
         
         <button type="submit" class="btn primary btn-icon">🔐 Se connecter</button>
     </form>
@@ -34,5 +32,4 @@
     {% if error %}
         <p style="color: red;">{{ error }}</p>
     {% endif %}
-</body>
-</html>
+{% endblock %}

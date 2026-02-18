@@ -62,21 +62,22 @@ def list_users():
 def edit_user(login: str):
     """Allow administrators to edit a user profile."""
     users = load_json(USER_FILE)
-    user = next((usr for usr in users if usr["Login"] == login), None)
+    user_record = next((usr for usr in users if usr["Login"] == login), None)
 
-    if user is None:
+    if user_record is None:
         return f"Utilisateur avec le login {login} non trouve.", 404
 
     if request.method == "POST":
-        user["Nom"] = request.form["nom"]
-        user["Prenom"] = request.form["prenom"]
-        user["Email"] = request.form["email"]
-        user["Notification"] = request.form.get("notification") == "on"
+        user_record["Nom"] = request.form["nom"]
+        user_record["Prenom"] = request.form["prenom"]
+        user_record["Email"] = request.form["email"]
+        user_record["Notification"] = request.form.get("notification") == "on"
 
         save_json(SAVE_USERS_FILE, users)
         return redirect(url_for("users.list_users"))
 
-    return render_template("user_edit.html", user=user)
+    user_session = session.get("user", {})
+    return render_template("user_edit.html", user=user_session, edit_user=user_record)
 
 
 @users_bp.route("/add", methods=["GET", "POST"])

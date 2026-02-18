@@ -5,18 +5,18 @@
 {% block content %}
 
     <!-- Formulaire de modification -->
-    <form method="POST" action="{{ url_for('users.edit_user', login=user['Login']) }}">
+    <form method="POST" action="{{ url_for('users.edit_user', login=edit_user['Login']) }}">
         <label for="nom">Nom :</label>
-        <input type="text" id="nom" name="nom" value="{{ user['Nom'] }}" required><br><br>
+        <input type="text" id="nom" name="nom" value="{{ edit_user['Nom'] }}" required><br><br>
 
         <label for="prenom">Prénom :</label>
-        <input type="text" id="prenom" name="prenom" value="{{ user['Prenom'] }}" required><br><br>
+        <input type="text" id="prenom" name="prenom" value="{{ edit_user['Prenom'] }}" required><br><br>
 
         <label for="email">Email :</label>
-        <input type="email" id="email" name="email" value="{{ user['Email'] }}" required><br><br>
+        <input type="email" id="email" name="email" value="{{ edit_user['Email'] }}" required><br><br>
 
         <label>
-            <input type="checkbox" name="notification" {% if user['Notification'] %}checked{% endif %}>
+            <input type="checkbox" name="notification" {% if edit_user['Notification'] %}checked{% endif %}>
             Recevoir des notifications
         </label><br><br>
         <!-- Ligne de separation-->
@@ -25,7 +25,7 @@
         <div class="actions u-mt-2">
             <button type="submit" class="btn primary btn-icon">💾 Enregistrer</button>
 
-            <form method="POST" action="{{ url_for('users.delete_user', login=user['Login']) }}" style="display: inline;">
+            <form method="POST" action="{{ url_for('users.delete_user', login=edit_user['Login']) }}" style="display: inline;">
                 <button type="submit" class="btn danger btn-icon icon-delete" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
             </form>
 

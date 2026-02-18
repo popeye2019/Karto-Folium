@@ -1,29 +1,51 @@
 """Core application factory and shared setup utilities."""
 
 from __future__ import annotations
-
 import os
+from pathlib import Path
 from datetime import datetime
-
 from flask import Flask, session
+
+
 
 NOTIFICATION_STORE = "./app/data/notif/notifications.json"
 DEFAULT_SITE_ETATS = ("ES", "HS")
 DEFAULT_URL_OUVRAGE = "/static/ouvrages/"
-SUFFIXE_APP_VERSION = "V0.1"
+DEFAULT_SUFFIXE_APP_VERSION = "BUGFIX"
+DEFAULT_APP_NAME = "NOM PAR DEFAUT"
+
 
 def create_app(config_object: str | object = "config.Config") -> Flask:
     """Create, configure, and return the Flask application instance."""
+    _load_local_dotenv()
     app = Flask(__name__)
     app.config.from_object(config_object)
 
-    app.config.setdefault(
+    # Environment variables override config object values when provided.
+    app.config["APP_VERSION"] = os.getenv(
         "APP_VERSION",
-        f"{os.getenv('APP_VERSION', 'Karto-Folium-dev')} {SUFFIXE_APP_VERSION}",
+        app.config.get("APP_VERSION", DEFAULT_SUFFIXE_APP_VERSION),
     )
-    app.config.setdefault("NOTIFICATION_STORE", NOTIFICATION_STORE)
-    app.config["SITE_ETATS"] = _load_site_states()
-    app.config.setdefault("URL_OUVRAGE", os.getenv("URL_OUVRAGE", DEFAULT_URL_OUVRAGE))
+    app.config["APP_NAME"] = os.getenv(
+        "APP_NAME",
+        app.config.get("APP_NAME", DEFAULT_APP_NAME),
+    )
+    app.config["NOTIFICATION_STORE"] = os.getenv(
+        "NOTIFICATION_STORE",
+        app.config.get("NOTIFICATION_STORE", NOTIFICATION_STORE),
+    )
+    app.config["SITE_ETATS"] = _load_site_states(app.config.get("SITE_ETATS"))
+    app.config["URL_OUVRAGE"] = os.getenv(
+        "URL_OUVRAGE",
+        app.config.get("URL_OUVRAGE", DEFAULT_URL_OUVRAGE),
+    )
+
+    # Keep APP_VERSION as source-of-truth and expose a display-ready variant.
+    app_name = str(app.config.get("APP_NAME", "")).strip()
+    app_version = str(app.config.get("APP_VERSION", "")).strip()
+    app.config["APP_VERSION_DISPLAY"] = (
+        f"{app_name} ({app_version})" if app_name and app_version else app_name or app_version
+    )
 
     _register_blueprints(app)
     _register_context_processors(app)
@@ -32,14 +54,36 @@ def create_app(config_object: str | object = "config.Config") -> Flask:
     return app
 
 
-def _load_site_states() -> tuple[str, ...]:
-    """Read SITE_ETATS from env (comma-separated) with a safe fallback."""
-    raw = os.getenv("SITE_ETATS")
-    if not raw:
-        return DEFAULT_SITE_ETATS
+def _load_local_dotenv() -> None:
+    """Load local dotenv files for entrypoints that bypass run.py."""
+    try:
+        from dotenv import load_dotenv
+    except Exception:
+        return
 
-    states = tuple(value.strip() for value in raw.split(",") if value.strip())
-    return states or DEFAULT_SITE_ETATS
+    base_dir = Path(__file__).resolve().parents[1]
+    for env_name in (".env", ".env.dev"):
+        env_path = base_dir / env_name
+        if env_path.exists():
+            load_dotenv(env_path, override=False)
+
+
+def _load_site_states(config_states: object = None) -> tuple[str, ...]:
+    """Read SITE_ETATS from env, then config, with a safe fallback."""
+    raw = os.getenv("SITE_ETATS")
+    if raw:
+        states = tuple(value.strip() for value in raw.split(",") if value.strip())
+        return states or DEFAULT_SITE_ETATS
+
+    if isinstance(config_states, (list, tuple)):
+        states = tuple(str(value).strip() for value in config_states if str(value).strip())
+        return states or DEFAULT_SITE_ETATS
+
+    if isinstance(config_states, str):
+        states = tuple(value.strip() for value in config_states.split(",") if value.strip())
+        return states or DEFAULT_SITE_ETATS
+
+    return DEFAULT_SITE_ETATS
 
 
 def _register_blueprints(app: Flask) -> None:
@@ -126,7 +170,11 @@ def _register_context_processors(app: Flask) -> None:
         return {
             "user": user,
             "notif_count": notif_count,
+            "APP_NAME": app.config.get("APP_NAME"),
+            "app_name": app.config.get("APP_NAME"),
             "app_version": app.config.get("APP_VERSION"),
+            "app_version_display": app.config.get("APP_VERSION_DISPLAY"),
+            "app_version_suffix": app.config.get("SUFFIXE_APP_VERSION"),
             "user_access_definition": access_definition,
         }
 

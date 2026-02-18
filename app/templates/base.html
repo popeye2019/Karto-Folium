@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>{{ app_version }}</title>
+    <title>{{ app_name }}</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dark.min.css') }}">
@@ -82,23 +82,27 @@
     </div>
     <div class="column header-brand">
       <img src="{{ url_for('static', filename='images/krto_logo.webp') }}" alt="Logo du site carto folium" height="64" width="64">
-      KRTO: {{ app_version }}
+      {{ app_version_display }}
     </div>
     <div class="column">
       {% if user %}
       <details>
         <summary class="user-summary">
           <span class="user-name">{{ user.prenom }} {{ user.nom }}</span>
-          <a href="{{ url_for('notif.view_notifications') }}" class="notification-link" aria-label="Voir les notifications">
-            &#128276;
-            {% if notif_count > 0 %}
-            <span class="badge">{{ notif_count }}</span>
-            {% endif %}
-          </a>
+          {% if user.get('access_level', 0) >= 3 %}
+            <a href="{{ url_for('notif.view_notifications') }}" class="notification-link" aria-label="Voir les notifications">
+              &#128276;
+              {% if notif_count > 0 %}
+              <span class="badge">{{ notif_count }}</span>
+              {% endif %}
+            </a>
+          {% endif %}
         </summary>
         <ul class="user-menu">
           <li><a href="{{ url_for('auth.change_password') }}">Modifier mon mot de passe</a></li>
+          {% if user.get('access_level', 0) >= 5 %}
           <li><a href="{{ url_for('users.edit_user', login=user.login) }}">Modifier utilisateur</a></li>
+          {% endif %}
           <li><hr></li>
           <li><a href="{{ url_for('auth.logout') }}">&#128274; Déconnexion</a></li>
         </ul>
@@ -127,10 +131,10 @@
 {% block footer %}
 <footer>
   <p class="text-center">
-    <img src="{{ url_for('static', filename='images/qrcode.png') }}" alt="QR code pour enregistrer le site en favori" height="64" width="64">
+    <img src="{{ url_for('static', filename='images/qr_code_krto_transparent.png') }}" alt="QR code pour enregistrer le site en favori" height="64" width="64">
   </p>
   <p>Carto folium par Francis.</p>
-  <p><a href="http://popeye.mine.nu">http://popeye.mine.nu</a></p>
+  <p><a href="https://krto.mine.nu">https://krto.mine.nu</a></p>
 </footer>
 {% endblock %}
 <script>

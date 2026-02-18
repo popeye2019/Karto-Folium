@@ -10,3 +10,6 @@ class Config:
 
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-not-safe")
     DEBUG = os.getenv("FLASK_DEBUG", "0") == "1"
+    APP_NAME="Karto-Folium"
+    APP_VERSION="V0.321"
+    NOTIFICATION_STORE = "./app/data/notif/notifications.json"

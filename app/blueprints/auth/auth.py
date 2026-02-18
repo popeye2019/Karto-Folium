@@ -29,13 +29,21 @@ USER_FILE_PATH = AUTH_USER_FILE
 @auth_bp.route("/", methods=["GET", "POST"])
 def login():
     """Handle user authentication and session creation."""
+    client_ip = request.headers.get("X-Forwarded-For", request.remote_addr or "")
+    if "," in client_ip:
+        client_ip = client_ip.split(",", 1)[0].strip()
+
     if request.method == "POST":
         login_value = request.form.get("login", "").strip()
         password = request.form.get("password", "").strip()
 
         if not login_value or not password:
             current_app.logger.info("Login rejected: missing credentials")
-            return render_template("login.html", error="Veuillez remplir tous les champs.")
+            return render_template(
+                "login.html",
+                error="Veuillez remplir tous les champs.",
+                client_ip=client_ip,
+            )
 
         user = verify_user(login_value, password)
         if user:
@@ -53,9 +61,9 @@ def login():
             return redirect(url_for("main.home"))
 
         current_app.logger.info("Login rejected: invalid credentials for %s", login_value)
-        return render_template("login.html", error="Identifiants invalides.")
+        return render_template("login.html", error="Identifiants invalides.", client_ip=client_ip)
 
-    return render_template("login.html", error=None)
+    return render_template("login.html", error=None, client_ip=client_ip)
 
 
 @auth_bp.route("/logout", methods=["GET", "POST"])
