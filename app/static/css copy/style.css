@@ -1,0 +1,38 @@
+/* Styles généraux */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* Conteneur principal pour la page de cartographie */
+.carto_edit_container {
+    display: flex;
+    height: 100vh; /* Hauteur complète de la fenêtre */
+}
+
+/* Panneau de contrôle à gauche */
+.carto_edit_control_panel {
+    width: 34%; /* Section gauche */
+    padding: 20px;
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+    background-color: #f8f8f8;
+    overflow-y: auto;
+}
+
+/* Conteneur pour l'iframe à droite */
+.carto_edit_iframe_container {
+    width: 66%; /* Section droite */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Style pour l'iframe */
+.carto_edit_iframe {
+    width: 90%;
+    height: 90%;
+    border: none;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}

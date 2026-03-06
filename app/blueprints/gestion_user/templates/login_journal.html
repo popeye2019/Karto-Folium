@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Journal des connexions{% endblock %}
+
+{% block content %}
+<h1>Journal des connexions</h1>
+
+<div class="actions u-mt-2">
+    <form method="POST" action="{{ url_for('users.reset_login_journal') }}" style="display: inline;">
+        <button type="submit" class="btn danger btn-icon" onclick="return confirm('Remettre le journal a zero ?')">
+            Remise a zero
+        </button>
+    </form>
+    <button type="button" class="btn secondary btn-icon" onclick="window.history.back();">Retour</button>
+</div>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Date/Heure</th>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Login</th>
+            <th>IP</th>
+            <th>Statut</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if entries %}
+            {% for entry in entries %}
+            <tr>
+                <td>{{ entry.get("Horodatage", "") }}</td>
+                <td>{{ entry.get("Nom", "") }}</td>
+                <td>{{ entry.get("Prenom", "") }}</td>
+                <td>{{ entry.get("Login", "") }}</td>
+                <td>{{ entry.get("IP", "") }}</td>
+                <td>{{ entry.get("Statut", "") }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="6">Aucune connexion enregistree.</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

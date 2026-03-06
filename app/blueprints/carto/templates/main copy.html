@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <a href="{{ url_for('auth.logout') }}" style="color: crimson; font-weight: bold;">🔒 Déconnexion
+    </a>
+{% endblock %}
+
+{% block content %}
+  {% if user %}
+      <h2>Bienvenue {{ user.prenom }} {{ user.nom }}{% if user_access_definition %} ({{ user_access_definition }}){% else %} (niveau {{ user.access_level }}){% endif %}</h2>
+  {% endif %}
+
+<div class="main-container">
+
+
+
+<div class="Carte utile">
+<h4> Carte assainissement.<br/></h4>
+<a href="{{url_for('static', filename='global/ouvrages.html') }}" target="_blank">Carte Assainissement</a>
+
+    <div class="site-search-card">
+      <h3>Rechercher un site</h3>
+      <p class="hint">Nom, commune ou type - 2 lettres suffisent pour lancer la recherche.</p>
+      <input type="search" id="siteSearchInput" placeholder="Ex: Brive, STEP, Laval..." autocomplete="off">
+      <div id="siteSearchResults" class="site-search-results">
+        <p class="placeholder">Commencez la saisie pour afficher les correspondances.</p>
+      </div>
+    </div>
+
+    <h2>Consultation des sites</h2>
+    <a href="{{ url_for('edit_sites.list_records') }}">Liste les sites</a>
+
+    {% if user and user.access_level >= 4 %}
+    <h2>Editeur de type ouvrages</h2>
+    <a href="{{ url_for('type_sites.list_type_sites') }}">Liste les types de sites</a></a>
+    {% endif %}
+
+    
+    {% if user and user.access_level >= 5 %}
+    <h2>Editeur utilisateurs</h2>
+    <a href="{{ url_for('users.list_users') }}">Liste des utilisateurs</a>
+    {% endif %}
+
+    {% if user and user.access_level == 5 %}
+    <h2>Sauvegarde et Restauration</h2>
+    <a href="{{ url_for('users.backup_restore') }}">Gestion des sauvegardes JSON</a>
+    {% endif %}
+
+    {% if user and user.access_level >= 5 %}
+    <h2>Editeur des droits</h2>
+    <a href="{{ url_for('user_rights.index') }}">Liste des droits des utilisateurs</a>
+    {% endif %}
+
+    {% if user and user.access_level >= 3 %}
+    <h2>Maintenance des sites</h2>
+    <a href="{{ url_for('pr_maint.maintenance_home') }}">Espace maintenance (accès niveau maintenance)</a>
+ 
+    <h2>Localiser un poste</h2>
+    <a href="{{ url_for('pr_maint.localisation_page') }}">Recueil GPS (maintenance)</a>
+    {% endif %}
+ 
+    {% if user and user.access_level >= 3 %}
+    <h2>Notifications</h2>
+    <a href="{{ url_for('notif.view_notifications') }}">Test de notification</a>
+
+    <h2>Creation Notifications</h2>
+    <a href="{{ url_for('notif.create_from_form') }}">Creation notification</a>
+
+    <h2>Creation Notifications Multiples</h2>
+    <a href="{{ url_for('notif.send_multi_notification') }}">Creation Multiples de notification</a>
+    {% endif %}
+</div>
+
+<style>
+  .site-search-card { margin: 1.2rem 0; padding: 1rem; border: 1px solid #243447; border-radius: 10px; background: #0f1a26; }
+  .site-search-card h3 { margin: 0 0 0.3rem; }
+  .site-search-card .hint { margin: 0 0 0.6rem; color: #9fb3c8; }
+  #siteSearchInput { width: 100%; padding: 0.6rem 0.75rem; border-radius: 8px; border: 1px solid #2b3947; background: #101820; color: #fff; }
+  .site-search-results { margin-top: 0.75rem; border: 1px solid #2b3947; border-radius: 8px; background: #101820; padding: 0.75rem; min-height: 64px; }
+  .site-search-results .placeholder { margin: 0; color: #8fa3bb; }
+  .site-search-results ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.35rem; }
+  .site-search-results li { padding: 0.6rem 0.75rem; border: 1px solid #243447; border-radius: 8px; background: #0f1a26; display: grid; grid-template-columns: 1fr auto; gap: 0.8rem; align-items: center; }
+  .site-search-results .label { font-weight: 700; grid-column: 1 / -1; }
+  .site-search-results .meta { color: #9fb3c8; font-size: 0.95rem; display: flex; gap: 0.6rem; flex-wrap: wrap; grid-column: 1 / -1; }
+  .site-search-results .links { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: flex-end; grid-column: 1 / -1; }
+  .site-search-results .links a {
+    color: #e6f1ff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.05rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #1c2e3f, #234562);
+    border: 1px solid #315475;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .site-search-results .links a:hover { text-decoration: underline; background: linear-gradient(135deg, #234562, #2d6186); }
+  .site-search-results .empty { margin: 0; color: #9fb3c8; }
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  (function() {
+    const input = document.getElementById('siteSearchInput');
+    const resultsBox = document.getElementById('siteSearchResults');
+    if (!input || !resultsBox) return;
+
+    const endpoint = "{{ url_for('main.site_search') }}";
+    let requestToken = 0;
+    let currentController = null;
+
+    function setMessage(text) {
+      resultsBox.innerHTML = '';
+      const p = document.createElement('p');
+      p.className = 'placeholder';
+      p.textContent = text;
+      resultsBox.appendChild(p);
+    }
+
+    function renderResults(items) {
+      resultsBox.innerHTML = '';
+      if (!items || items.length === 0) {
+        const p = document.createElement('p');
+        p.className = 'empty';
+        p.textContent = 'Aucun r\u00e9sultat pour cette saisie.';
+        resultsBox.appendChild(p);
+        return;
+      }
+      const list = document.createElement('ul');
+      items.forEach(item => {
+        const li = document.createElement('li');
+        const label = document.createElement('div');
+        label.className = 'label';
+        label.textContent = item.nom || 'Sans nom';
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        const type = document.createElement('span');
+        type.textContent = item.type || 'Type inconnu';
+        const commune = document.createElement('span');
+        commune.textContent = item.commune || 'Commune inconnue';
+        meta.appendChild(type);
+        meta.appendChild(commune);
+        const links = document.createElement('div');
+        links.className = 'links';
+        if (item.gmaps_url) {
+          const gmaps = document.createElement('a');
+          gmaps.href = item.gmaps_url;
+          gmaps.target = '_blank';
+          gmaps.rel = 'noopener noreferrer';
+          const gmapsIcon = document.createElement('span');
+          gmapsIcon.textContent = '\ud83d\udccd';
+          const gmapsText = document.createElement('span');
+          gmapsText.textContent = 'Maps';
+          gmaps.appendChild(gmapsIcon);
+          gmaps.appendChild(gmapsText);
+          gmaps.ariaLabel = 'Ouvrir sur Google Maps';
+          links.appendChild(gmaps);
+        }
+        if (item.map_url) {
+          const mapLink = document.createElement('a');
+          mapLink.href = item.map_url;
+          mapLink.target = '_blank';
+          mapLink.rel = 'noopener noreferrer';
+          const mapIcon = document.createElement('span');
+          mapIcon.textContent = '\ud83e\udded';
+          const mapText = document.createElement('span');
+          mapText.textContent = 'Carte';
+          mapLink.appendChild(mapIcon);
+          mapLink.appendChild(mapText);
+          mapLink.ariaLabel = 'Voir la carte';
+          links.appendChild(mapLink);
+        }
+        li.appendChild(label);
+        li.appendChild(meta);
+        if (links.children.length > 0) {
+          li.appendChild(links);
+        }
+        list.appendChild(li);
+      });
+      resultsBox.appendChild(list);
+    }
+
+    function fetchResults(query) {
+      const token = ++requestToken;
+      if (currentController) {
+        currentController.abort();
+      }
+      currentController = new AbortController();
+      setMessage('Recherche...');
+      fetch(`${endpoint}?q=${encodeURIComponent(query)}`, { signal: currentController.signal })
+        .then(resp => resp.ok ? resp.json() : Promise.reject(resp.status))
+        .then(data => {
+          if (token !== requestToken) return;
+          if (data && data.error) {
+            setMessage(data.error);
+            return;
+          }
+          renderResults(data && Array.isArray(data.results) ? data.results : []);
+        })
+        .catch(err => {
+          if (err.name === 'AbortError') return;
+          setMessage('Impossible de charger les r\u00e9sultats pour le moment.');
+        });
+    }
+
+    input.addEventListener('input', () => {
+      const value = input.value.trim();
+      if (value.length === 0) {
+        setMessage('Commencez la saisie pour afficher les correspondances.');
+        return;
+      }
+      if (value.length < 2) {
+        setMessage('Tapez au moins 2 lettres pour lancer la recherche.');
+        return;
+      }
+      fetchResults(value);
+    });
+  })();
+</script>
+{% endblock %}

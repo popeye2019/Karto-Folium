@@ -1,0 +1,20 @@
+select:not([multiple]) {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-position: calc(100% - 12px) 50%;
+    background-repeat: no-repeat;
+}
+
+/* Re-enable default rendering for older Firefox where the rule above applies */
+@supports (-moz-appearance: none) {
+    select:not([multiple]) {
+        -moz-appearance: none;
+    }
+}
+
+select[multiple] {
+    -webkit-appearance: listbox;
+    -moz-appearance: listbox;
+    appearance: listbox;
+}

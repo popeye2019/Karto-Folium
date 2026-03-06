@@ -4,7 +4,7 @@ from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
-def test_login_success_sets_session_and_redirects(client, monkeypatch):
+def test_login_success_sets_session_and_redirects(client, monkeypatch, tmp_path):
     def fake_verify_user(login_value, password):
         return {
             "Login": login_value,
@@ -16,6 +16,10 @@ def test_login_success_sets_session_and_redirects(client, monkeypatch):
         }
 
     monkeypatch.setattr("app.blueprints.auth.auth.verify_user", fake_verify_user)
+    monkeypatch.setattr(
+        "app.blueprints.auth.auth.LOGIN_JOURNAL_FILE",
+        str(tmp_path / "login_journal.json"),
+    )
 
     response = client.post(
         "/auth/",
@@ -185,3 +189,26 @@ def test_change_password_rejects_bad_current_password(client, monkeypatch, tmp_p
 
     updated_users = json.loads(user_file.read_text(encoding="utf-8"))
     assert updated_users[0]["Mot de passe"] == hashed_password
+
+
+def test_about_config_requires_level_five(client):
+    with client.session_transaction() as session:
+        session["user"] = {"login": "low", "uuid": "u-low", "access_level": 4}
+
+    response = client.get("/auth/about-config", follow_redirects=False)
+
+    assert response.status_code == 200
+    assert b"Niveau requis" in response.data
+
+
+def test_about_config_returns_sanitized_payload(client):
+    with client.session_transaction() as session:
+        session["user"] = {"login": "admin", "uuid": "u-admin", "access_level": 5}
+
+    response = client.get("/auth/about-config", follow_redirects=False)
+
+    assert response.status_code == 200
+    payload = response.get_json()
+    assert isinstance(payload, dict)
+    assert "config" in payload
+    assert "SECRET_KEY" not in payload["config"]

@@ -13,6 +13,14 @@ DEFAULT_SITE_ETATS = ("ES", "HS")
 DEFAULT_URL_OUVRAGE = "/static/ouvrages/"
 DEFAULT_SUFFIXE_APP_VERSION = "BUGFIX"
 DEFAULT_APP_NAME = "NOM PAR DEFAUT"
+DEFAULT_APP_MODE = "INCONNU"
+
+
+def _coerce_int(value: object, default: int) -> int:
+    try:
+        return int(str(value))
+    except (TypeError, ValueError):
+        return default
 
 
 def create_app(config_object: str | object = "config.Config") -> Flask:
@@ -30,6 +38,10 @@ def create_app(config_object: str | object = "config.Config") -> Flask:
         "APP_NAME",
         app.config.get("APP_NAME", DEFAULT_APP_NAME),
     )
+    app.config["APP_MODE"] = os.getenv(
+        "APP_MODE",
+        app.config.get("APP_MODE", DEFAULT_APP_MODE),
+    )
     app.config["NOTIFICATION_STORE"] = os.getenv(
         "NOTIFICATION_STORE",
         app.config.get("NOTIFICATION_STORE", NOTIFICATION_STORE),
@@ -38,6 +50,29 @@ def create_app(config_object: str | object = "config.Config") -> Flask:
     app.config["URL_OUVRAGE"] = os.getenv(
         "URL_OUVRAGE",
         app.config.get("URL_OUVRAGE", DEFAULT_URL_OUVRAGE),
+    )
+    app.config["USERS_FILE"] = os.getenv(
+        "USERS_FILE",
+        app.config.get("USERS_FILE", "./app/data/users/users.json"),
+    )
+    app.config["RIGHTS_FILE"] = os.getenv(
+        "RIGHTS_FILE",
+        app.config.get("RIGHTS_FILE", "./app/data/users/droits.json"),
+    )
+    app.config["LOGIN_JOURNAL_FILE"] = os.getenv(
+        "LOGIN_JOURNAL_FILE",
+        app.config.get("LOGIN_JOURNAL_FILE", "./app/data/users/login_journal.json"),
+    )
+    app.config["LOGIN_BAN_FILE"] = os.getenv(
+        "LOGIN_BAN_FILE",
+        app.config.get("LOGIN_BAN_FILE", "./app/data/users/login_bans.json"),
+    )
+    app.config["LOGIN_JOURNAL_MAX_ENTRIES"] = _coerce_int(
+        os.getenv(
+            "LOGIN_JOURNAL_MAX_ENTRIES",
+            app.config.get("LOGIN_JOURNAL_MAX_ENTRIES", 2000),
+        ),
+        2000,
     )
 
     # Keep APP_VERSION as source-of-truth and expose a display-ready variant.
@@ -146,8 +181,9 @@ def _register_context_processors(app: Flask) -> None:
                     and not notif.get("is_read")
                 )
             # Resolve the textual definition for the user's access level, if available.
+            rights_path = app.config.get("RIGHTS_FILE", "./app/data/users/droits.json")
             try:
-                rights = load_json_file("./app/data/users/droits.json")
+                rights = load_json_file(str(rights_path))
             except FileNotFoundError:
                 rights = []
             except Exception:  # pragma: no cover - defensive

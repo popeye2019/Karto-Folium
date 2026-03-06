@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Sauvegarde et Restauration{% endblock %}
+
+{% block content %}
+<h1>Sauvegarde et Restauration</h1>
+
+<div class="card" style="margin-top: 0.75rem; padding: 0.75rem 1rem;">
+    <h2 style="margin: 0 0 0.25rem 0; font-size: 1.1rem;">Administration des donnees JSON</h2>
+    <p style="margin: 0 0 0.5rem 0; font-size: 0.95rem;">
+        Telecharger une sauvegarde JSON de <code>app/data</code> ou restaurer depuis un fichier .zip (JSON uniquement).
+    </p>
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+        <a href="{{ url_for('users.download_backup') }}" class="btn secondary btn-icon">&#8681; Telecharger la sauvegarde JSON</a>
+        <form action="{{ url_for('users.restore_backup') }}" method="post" enctype="multipart/form-data" style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin: 0;">
+            <label for="backup_file" style="margin: 0;">Restaurer JSON (.zip)</label>
+            <input type="file" id="backup_file" name="file" accept=".zip" required>
+            <button type="submit" class="btn primary btn-icon">&#8635; Restaurer</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

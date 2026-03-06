@@ -1,0 +1,126 @@
+.theme-switch-input {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid #425a72;
+  background: #142333;
+  color: #dbe8f4;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+.theme-toggle:hover {
+  border-color: #5d7894;
+  background: #1a3045;
+}
+
+.theme-toggle-on {
+  display: none;
+}
+
+#theme_switch:checked ~ .app-shell .theme-toggle-off {
+  display: none;
+}
+
+#theme_switch:checked ~ .app-shell .theme-toggle-on {
+  display: inline;
+}
+
+#theme_switch:checked ~ .app-shell .theme-toggle {
+  border-color: #6ab9b0;
+  background: #244b52;
+  color: #dcfffb;
+}
+
+/* Theme B: pastel green + pastel blue */
+#theme_switch:checked ~ .app-shell {
+  --background-body: #1f2a2d;
+  --background: #26363b;
+  --background-alt: #31484f;
+  --selection: #7bc9d7;
+  --text-main: #e6f3f5;
+  --text-bright: #f6ffff;
+  --text-muted: #b8d7dc;
+  --links: #bceff4;
+  --focus: rgba(136, 213, 201, 0.52);
+  --border: #6ea4ad;
+  --button-base: #2f5e67;
+  --button-hover: #3b7580;
+  --scrollbar-thumb: #3f7f87;
+  --scrollbar-thumb-hover: #5da0a8;
+  --form-placeholder: #b3d2d7;
+  --form-text: #f3ffff;
+  --highlight: #a5e8d9;
+}
+
+#theme_switch:checked ~ .app-shell .home-header {
+  background: linear-gradient(160deg, #2e6462, #2f5b70);
+  border-color: #6fb2b1;
+}
+
+#theme_switch:checked ~ .app-shell .home-panel {
+  background: #294047;
+  border-color: #6fa9b2;
+}
+
+#theme_switch:checked ~ .app-shell .action-link {
+  background: #30505a;
+  border-color: #72aeb8;
+}
+
+#theme_switch:checked ~ .app-shell .action-link:hover {
+  background: #3a6470;
+  border-color: #8fd0c5;
+}
+
+#theme_switch:checked ~ .app-shell .action-button {
+  background: #4aa79a;
+  border-color: #8cd6c8;
+  color: #113036;
+}
+
+#theme_switch:checked ~ .app-shell .action-button:hover {
+  background: #62bfb1;
+  border-color: #a6e1d8;
+}
+
+#theme_switch:checked ~ .app-shell .site-search-card,
+#theme_switch:checked ~ .app-shell .site-search-results {
+  background: #253a40;
+  border-color: #6fa6ad;
+}
+
+#theme_switch:checked ~ .app-shell .site-search-results li {
+  background: #2f4950;
+  border-color: #75adb5;
+}
+
+#theme_switch:checked ~ .app-shell .site-search-results .links a {
+  background: #4b95c8;
+  border-color: #8bc9ed;
+}
+
+#theme_switch:checked ~ .app-shell .site-search-results .links a:hover {
+  background: #66acdd;
+  border-color: #a7daf6;
+}

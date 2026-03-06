@@ -10,12 +10,20 @@ from werkzeug.security import check_password_hash
 
 from app.utils.utils_json import load_json_file as load_users
 
-USER_FILE = "./app/data/users/users.json"
+DEFAULT_USER_FILE = "./app/data/users/users.json"
+USER_FILE = DEFAULT_USER_FILE
+
+
+def _user_file_path() -> str:
+    configured = current_app.config.get("USERS_FILE")
+    if configured and str(configured) != DEFAULT_USER_FILE:
+        return str(configured)
+    return USER_FILE
 
 
 def verify_user(login_value: str, password: str) -> dict[str, Any] | None:
     """Return the matching user when credentials are valid, otherwise None."""
-    users = load_users(USER_FILE)
+    users = load_users(_user_file_path())
     user = next((usr for usr in users if usr["Login"] == login_value), None)
 
     if user is None:

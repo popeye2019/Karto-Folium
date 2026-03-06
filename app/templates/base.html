@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dark.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-switch.css') }}">
     <style>
       .flash-container { margin: 1rem 0; }
       .flash {
@@ -59,6 +60,12 @@
       }
       .user-menu li { margin-bottom: 0.4rem; }
       .user-menu li:last-child { margin-bottom: 0; }
+      .user-menu-separator {
+        color: #8b8b8b;
+        font-family: monospace;
+        letter-spacing: 0.02em;
+        user-select: none;
+      }
 
       /* Page-level styles kept minimal; component styles live in dark.min.css */
       .header-brand {
@@ -69,9 +76,44 @@
       .header-brand img {
         display: block;
       }
+      .header-user-column {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: flex-start;
+        gap: 0.5rem;
+        text-align: right;
+      }
+      .header-user-column details {
+        margin: 0;
+        align-self: flex-end;
+        min-width: 16rem;
+        text-align: left;
+      }
+      .header-user-column details > summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+      }
+      @media (max-width: 900px) {
+        .header-user-column {
+          align-items: stretch;
+          text-align: left;
+        }
+        .header-user-column details {
+          align-self: stretch;
+          min-width: 0;
+        }
+        .header-user-column .theme-toggle {
+          align-self: flex-end;
+        }
+      }
     </style>
 </head>
 <body>
+<input id="theme_switch" class="theme-switch-input" type="checkbox" aria-label="Activer le theme alternatif">
+<div class="app-shell">
 <header>
   <div class="container">
     <div class="column">
@@ -84,7 +126,11 @@
       <img src="{{ url_for('static', filename='images/krto_logo.webp') }}" alt="Logo du site carto folium" height="64" width="64">
       {{ app_version_display }}
     </div>
-    <div class="column">
+    <div class="column header-user-column">
+      <label for="theme_switch" class="theme-toggle" title="Basculer le theme">
+        <span class="theme-toggle-off">Theme actuel</span>
+        <span class="theme-toggle-on">Theme alternatif</span>
+      </label>
       {% if user %}
       <details>
         <summary class="user-summary">
@@ -105,6 +151,10 @@
           {% endif %}
           <li><hr></li>
           <li><a href="{{ url_for('auth.logout') }}">&#128274; Déconnexion</a></li>
+          {% if user.get('access_level', 0) >= 5 %}
+          <li class="user-menu-separator" aria-hidden="true">______________</li>
+          <li><a href="#" id="about-config-link">A propos de la configuration</a></li>
+          {% endif %}
         </ul>
       </details>
       {% endif %}
@@ -137,6 +187,16 @@
   <p><a href="https://krto.mine.nu">https://krto.mine.nu</a></p>
 </footer>
 {% endblock %}
+<dialog id="about-config-dialog" aria-labelledby="about-config-title">
+  <header>
+    <h3 id="about-config-title">A propos de la configuration</h3>
+  </header>
+  <p>Configuration applicative (champs sensibles masques).</p>
+  <pre id="about-config-content">Chargement...</pre>
+  <div class="actions">
+    <button type="button" id="about-config-close" class="btn secondary btn-icon">Fermer</button>
+  </div>
+</dialog>
 <script>
   (function () {
     const container = document.querySelector('.flash-container');
@@ -151,7 +211,47 @@
       }, 6000);
     });
   })();
+  (function () {
+    const trigger = document.getElementById('about-config-link');
+    if (!trigger) return;
+    const dialog = document.getElementById('about-config-dialog');
+    const content = document.getElementById('about-config-content');
+    const closeBtn = document.getElementById('about-config-close');
+    if (!dialog || !content || !closeBtn) return;
+
+    async function openDialog() {
+      content.textContent = 'Chargement...';
+      if (typeof dialog.showModal === 'function') {
+        dialog.showModal();
+      } else {
+        dialog.setAttribute('open', 'open');
+      }
+      try {
+        const resp = await fetch('{{ url_for("auth.about_config") }}', { credentials: 'same-origin' });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+        content.textContent = JSON.stringify((data && data.config) || {}, null, 2);
+      } catch (_err) {
+        content.textContent = 'Impossible de charger la configuration.';
+      }
+    }
+
+    function closeDialog() {
+      if (typeof dialog.close === 'function') {
+        dialog.close();
+      } else {
+        dialog.removeAttribute('open');
+      }
+    }
+
+    trigger.addEventListener('click', function (event) {
+      event.preventDefault();
+      openDialog();
+    });
+    closeBtn.addEventListener('click', closeDialog);
+  })();
 </script>
 {% block extra_scripts %}{% endblock %}
+</div>
 </body>
 </html>

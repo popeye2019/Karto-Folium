@@ -5,7 +5,7 @@
 {% block content %}
 
     <!-- Formulaire de modification -->
-    <form method="POST" action="{{ url_for('users.edit_user', login=edit_user['Login']) }}">
+    <form id="edit-user-form" method="POST" action="{{ url_for('users.edit_user', login=edit_user['Login']) }}">
         <label for="nom">Nom :</label>
         <input type="text" id="nom" name="nom" value="{{ edit_user['Nom'] }}" required><br><br>
 
@@ -15,23 +15,41 @@
         <label for="email">Email :</label>
         <input type="email" id="email" name="email" value="{{ edit_user['Email'] }}" required><br><br>
 
+        <label for="niveau_acces">Niveau d'acces :</label>
+        <select id="niveau_acces" name="niveau_acces" required>
+            {% for level, label in access_options %}
+                <option value="{{ level }}" {% if edit_user.get('Niveau acces') == level %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select><br><br>
+
         <label>
             <input type="checkbox" name="notification" {% if edit_user['Notification'] %}checked{% endif %}>
             Recevoir des notifications
         </label><br><br>
+        {% if can_reset_password %}
+        <fieldset>
+            <legend>Reinitialiser le mot de passe (optionnel)</legend>
+            <label for="new_password">Nouveau mot de passe :</label>
+            <input type="password" id="new_password" name="new_password" autocomplete="new-password"><br><br>
+
+            <label for="confirm_password">Confirmer le mot de passe :</label>
+            <input type="password" id="confirm_password" name="confirm_password" autocomplete="new-password"><br><br>
+        </fieldset>
+        {% endif %}
         <!-- Ligne de separation-->
         <hr>
-        <!-- Boutons -->
-        <div class="actions u-mt-2">
-            <button type="submit" class="btn primary btn-icon">💾 Enregistrer</button>
-
-            <form method="POST" action="{{ url_for('users.delete_user', login=edit_user['Login']) }}" style="display: inline;">
-                <button type="submit" class="btn danger btn-icon icon-delete" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
-            </form>
-
-            <a href="{{ url_for('users.list_users') }}" class="btn secondary btn-icon icon-back">Annuler</a>
-        </div>
     </form>
+
+    <!-- Boutons -->
+    <div class="actions u-mt-2">
+        <button type="submit" form="edit-user-form" class="btn primary btn-icon">💾 Enregistrer</button>
+
+        <form method="POST" action="{{ url_for('users.delete_user', login=edit_user['Login']) }}" style="display: inline;">
+            <button type="submit" class="btn danger btn-icon icon-delete" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
+        </form>
+
+        <a href="{{ url_for('users.list_users') }}" class="btn secondary btn-icon icon-back">Annuler</a>
+    </div>
 
 {% endblock %}
 
