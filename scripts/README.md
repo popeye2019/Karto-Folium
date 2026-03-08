@@ -11,8 +11,14 @@ But
 Usage
 - Tableau lisible:
   - python scripts/verify_routes.py
+- Génère aussi un rapport texte:
+  - `scripts/verify_routes_report.txt`
 - Export JSON:
   - python scripts/verify_routes.py --json
+- Choisir le chemin du rapport:
+  - python scripts/verify_routes.py --report reports/routes_audit.txt
+- Désactiver les checks runtime:
+  - python scripts/verify_routes.py --skip-runtime
 
 Détails
 - L’analyse statique utilise l’AST Python pour récupérer:
@@ -30,4 +36,3 @@ Intégration aux tests
 Notes
 - Le script et les tests n’installent aucune dépendance externe; ils simulent `folium`/`babel` si nécessaire
   uniquement pour permettre l’import de l’application.
-

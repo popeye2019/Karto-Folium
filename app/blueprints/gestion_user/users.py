@@ -36,6 +36,8 @@ USER_FILE = DEFAULT_USER_FILE
 SAVE_USERS_FILE = DEFAULT_USER_FILE
 RIGHTS_FILE = DEFAULT_RIGHTS_FILE
 LOGIN_JOURNAL_FILE = DEFAULT_LOGIN_JOURNAL_FILE
+USERS_VIEW_LEVEL = 1
+USERS_ADMIN_LEVEL = 5
 
 users_bp = Blueprint("users", __name__, template_folder="templates")
 
@@ -212,9 +214,41 @@ def _apply_restore_payload(data_dir: Path, payload: dict[Path, str]) -> None:
                 obsolete.unlink()
 
 
+def _contracts_to_text(raw_contracts: Any) -> str:
+    if not isinstance(raw_contracts, list):
+        return ""
+    cleaned = [str(item).strip() for item in raw_contracts if str(item).strip()]
+    return "\n".join(cleaned)
+
+
+def _parse_contracts_text(raw_text: str) -> list[str]:
+    tokens: list[str] = []
+    for line in raw_text.splitlines():
+        for part in line.split(","):
+            value = part.strip()
+            if value:
+                tokens.append(value)
+    return tokens
+
+
+def _build_edit_user_view_model(user_record: dict[str, Any]) -> dict[str, Any]:
+    view_model = dict(user_record)
+    view_model.setdefault("Nom", "")
+    view_model.setdefault("Prenom", "")
+    view_model.setdefault("Login", "")
+    view_model.setdefault("Email", "")
+    view_model.setdefault("Niveau acces", 1)
+    view_model.setdefault("Notification", False)
+    view_model.setdefault("First_Login", False)
+    view_model.setdefault("Date_connec", None)
+    view_model.setdefault("id", "")
+    view_model["contracts_text"] = _contracts_to_text(view_model.get("Contrat", []))
+    return view_model
+
+
 @users_bp.route("/")
 @login_required
-@require_level(5)
+@require_level(USERS_ADMIN_LEVEL)
 def list_users():
     """Display the list of registered users."""
     users = load_json(_users_file_path())
@@ -233,7 +267,7 @@ def list_users():
 
 @users_bp.route("/backup", methods=["GET"])
 @login_required
-@require_level(5)
+@require_level(USERS_ADMIN_LEVEL)
 def backup_restore():
     """Render the dedicated backup/restore page for administrators."""
     if not _is_exact_level_five():
@@ -250,7 +284,7 @@ def backup_restore():
 
 @users_bp.route("/edit/<login>", methods=["GET", "POST"])
 @login_required
-@require_level(5)
+@require_level(USERS_ADMIN_LEVEL)
 def edit_user(login: str):
     """Allow administrators to edit a user profile."""
     user_session = session.get("user", {})
@@ -263,34 +297,47 @@ def edit_user(login: str):
     if user_record is None:
         return f"Utilisateur avec le login {login} non trouve.", 404
 
+    def render_edit(form_data: dict[str, Any]) -> str:
+        return render_template(
+            "user_edit.html",
+            user=user_session,
+            edit_user=form_data,
+            edit_target_login=login,
+            can_reset_password=can_reset_password,
+            access_options=access_options,
+        )
+
     if request.method == "POST":
-        user_record["Nom"] = request.form["nom"]
-        user_record["Prenom"] = request.form["prenom"]
-        user_record["Email"] = request.form["email"]
-        user_record["Notification"] = request.form.get("notification") == "on"
+        current_login = str(user_record.get("Login", ""))
+        updated_user = dict(user_record)
+
+        updated_user["Nom"] = (request.form.get("nom") or "").strip()
+        updated_user["Prenom"] = (request.form.get("prenom") or "").strip()
+        updated_user["Email"] = (request.form.get("email") or "").strip()
+        updated_user["Notification"] = request.form.get("notification") == "on"
+        updated_user["First_Login"] = request.form.get("first_login") == "on"
+        updated_user["Contrat"] = _parse_contracts_text(request.form.get("contrat") or "")
+
+        updated_login = (request.form.get("login") or current_login).strip()
+        if not updated_login:
+            flash("Le login est obligatoire.", "warning")
+            return render_edit(_build_edit_user_view_model(updated_user))
+        if updated_login != current_login and any(usr.get("Login") == updated_login for usr in users):
+            flash("Ce login est deja utilise.", "warning")
+            return render_edit(_build_edit_user_view_model(updated_user))
+        updated_user["Login"] = updated_login
+
         selected_level_raw = (request.form.get("niveau_acces") or "").strip()
         try:
             selected_level = int(selected_level_raw)
         except ValueError:
             flash("Niveau d'acces invalide.", "warning")
-            return render_template(
-                "user_edit.html",
-                user=user_session,
-                edit_user=user_record,
-                can_reset_password=can_reset_password,
-                access_options=access_options,
-            )
+            return render_edit(_build_edit_user_view_model(updated_user))
 
         if selected_level not in allowed_levels:
             flash("Niveau d'acces non autorise.", "warning")
-            return render_template(
-                "user_edit.html",
-                user=user_session,
-                edit_user=user_record,
-                can_reset_password=can_reset_password,
-                access_options=access_options,
-            )
-        user_record["Niveau acces"] = selected_level
+            return render_edit(_build_edit_user_view_model(updated_user))
+        updated_user["Niveau acces"] = selected_level
 
         if can_reset_password:
             new_password = (request.form.get("new_password") or "").strip()
@@ -298,34 +345,30 @@ def edit_user(login: str):
             if new_password or confirm_password:
                 if new_password != confirm_password:
                     flash("Les nouveaux mots de passe ne correspondent pas.", "warning")
-                    return render_template(
-                        "user_edit.html",
-                        user=user_session,
-                        edit_user=user_record,
-                        can_reset_password=can_reset_password,
-                        access_options=access_options,
-                    )
-                user_record["Mot de passe"] = generate_password_hash(new_password)
+                    return render_edit(_build_edit_user_view_model(updated_user))
+                updated_user["Mot de passe"] = generate_password_hash(new_password)
                 flash("Mot de passe reinitialise.", "success")
 
+        user_record.update(updated_user)
         save_json(_users_file_path(write=True), users)
-        if user_session.get("login") == user_record.get("Login"):
+        if user_session.get("login") == current_login:
+            user_session["login"] = str(user_record.get("Login", user_session.get("login", "")))
             user_session["access_level"] = user_record.get("Niveau acces", user_session.get("access_level", 0))
+            user_session["nom"] = str(user_record.get("Nom", user_session.get("nom", "")))
+            user_session["prenom"] = str(user_record.get("Prenom", user_session.get("prenom", "")))
+            user_session["uuid"] = str(user_record.get("id", user_session.get("uuid", "")))
+            user_session["autorise_notif"] = bool(
+                user_record.get("Notification", user_session.get("autorise_notif", False))
+            )
             session["user"] = user_session
         return redirect(url_for("users.list_users"))
 
-    return render_template(
-        "user_edit.html",
-        user=user_session,
-        edit_user=user_record,
-        can_reset_password=can_reset_password,
-        access_options=access_options,
-    )
+    return render_edit(_build_edit_user_view_model(user_record))
 
 
 @users_bp.route("/login-journal", methods=["GET"])
 @login_required
-@require_level(5)
+@require_level(USERS_ADMIN_LEVEL)
 def login_journal():
     """Display recent login history for administrators."""
     entries = _load_login_journal()
@@ -335,7 +378,7 @@ def login_journal():
 
 @users_bp.route("/login-journal/reset", methods=["POST"])
 @login_required
-@require_level(5)
+@require_level(USERS_ADMIN_LEVEL)
 def reset_login_journal():
     """Clear login history entries."""
     save_json(_login_journal_file_path(), [])
@@ -345,7 +388,7 @@ def reset_login_journal():
 
 @users_bp.route("/add", methods=["GET", "POST"])
 @login_required
-@require_level(5)
+@require_level(USERS_ADMIN_LEVEL)
 def add_user():
     """Create a new user with a hashed password."""
     if request.method == "POST":
@@ -377,7 +420,7 @@ def add_user():
 
 @users_bp.route("/delete/<login>", methods=["POST"])
 @login_required
-@require_level(5)
+@require_level(USERS_ADMIN_LEVEL)
 def delete_user(login: str):
     """Remove the given user from the JSON store."""
     users = load_json(_users_file_path())
@@ -392,7 +435,7 @@ def delete_user(login: str):
 
 @users_bp.route("/rights")
 @login_required
-@require_level(1)
+@require_level(USERS_VIEW_LEVEL)
 def list_rights():
     """Display the rights definitions."""
     rights = load_json(_rights_file_path())
@@ -401,7 +444,7 @@ def list_rights():
 
 @users_bp.route("/rights/edit/<int:level>", methods=["GET", "POST"])
 @login_required
-@require_level(5)
+@require_level(USERS_ADMIN_LEVEL)
 def edit_right(level: int):
     """Edit the definition for a specific access level."""
     rights = load_json(_rights_file_path())
@@ -420,7 +463,7 @@ def edit_right(level: int):
 
 @users_bp.route("/backup/download", methods=["GET"])
 @login_required
-@require_level(5)
+@require_level(USERS_ADMIN_LEVEL)
 def download_backup():
     """Build a JSON-only zip of app/data and send it to the administrator."""
     if not _is_exact_level_five():
@@ -447,7 +490,7 @@ def download_backup():
 
 @users_bp.route("/backup/restore", methods=["POST"])
 @login_required
-@require_level(5)
+@require_level(USERS_ADMIN_LEVEL)
 def restore_backup():
     """Restore app/data JSON files from an uploaded zip archive."""
     if not _is_exact_level_five():
@@ -489,3 +532,4 @@ def restore_backup():
         )
 
     return redirect(url_for("users.backup_restore"))
+

@@ -11,11 +11,12 @@ from app.utils.utils_json import save_json_file as write_json
 rights_bp = Blueprint("user_rights", __name__, template_folder="templates")
 
 DATA_FILE = "./app/data/users/droits.json"
+RIGHTS_ADMIN_LEVEL = 5
 
 
 @rights_bp.route("/")
 @login_required
-@require_level(5)
+@require_level(RIGHTS_ADMIN_LEVEL)
 def index():
     """List the access levels and their definitions."""
     data = read_json(DATA_FILE)
@@ -24,7 +25,7 @@ def index():
 
 @rights_bp.route("/edit/<int:niveau>", methods=["GET", "POST"])
 @login_required
-@require_level(5)
+@require_level(RIGHTS_ADMIN_LEVEL)
 def edit(niveau: int):
     """Edit an access level definition by its integer id."""
     if 1 <= niveau <= 5:
@@ -47,7 +48,7 @@ def edit(niveau: int):
 
 @rights_bp.route("/add", methods=["GET", "POST"])
 @login_required
-@require_level(5)
+@require_level(RIGHTS_ADMIN_LEVEL)
 def add_right():
     """Create a brand new access level."""
     rights = read_json(DATA_FILE)
@@ -73,7 +74,7 @@ def add_right():
 
 @rights_bp.route("/delete/<int:niveau>", methods=["POST"])
 @login_required
-@require_level(5)
+@require_level(RIGHTS_ADMIN_LEVEL)
 def delete(niveau: int):
     """Delete an access level when it is not protected."""
     if 1 <= niveau <= 5:

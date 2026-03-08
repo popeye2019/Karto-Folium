@@ -10,11 +10,12 @@ from app.utils.utils_json import load_json_file
 
 main_bp = Blueprint("main", __name__, template_folder="templates")
 SITE_DATA_PATH = "./app/data/sites/recap.json"
+MAIN_ACCESS_LEVEL = 1
 
 
 @main_bp.route("/")
 @login_required
-@require_level(1)
+@require_level(MAIN_ACCESS_LEVEL)
 def home():
     """Render the authenticated home page."""
     user = session.get("user")
@@ -29,7 +30,7 @@ def home():
 
 @main_bp.get("/site-search")
 @login_required
-@require_level(1)
+@require_level(MAIN_ACCESS_LEVEL)
 def site_search():
     """Return matching sites for the autocomplete on the home page."""
     query = request.args.get("q", "").strip()
@@ -92,7 +93,7 @@ def site_search():
 
 @main_bp.route("/upload-test-icon", methods=["POST"])
 @login_required
-@require_level(1)
+@require_level(MAIN_ACCESS_LEVEL)
 def upload_test_icon():
     file = request.files.get("icon_file")
     if not file or not file.filename:

@@ -27,6 +27,8 @@ DATA_FILE = "./app/data/sites/recap.json"
 TYPE_FILE = "./app/data/sites/type_site.json"
 COMMUNES_FILE = "./app/data/sites/communes.json"
 DEFAULT_SITE_STATES = ("ES", "HS")
+EDIT_SITES_VIEW_LEVEL = 1
+EDIT_SITES_EDIT_LEVEL = 4
 edit_sites_bp = Blueprint("edit_sites", __name__, template_folder="templates")
 
 
@@ -131,7 +133,7 @@ def _normalize_state(value: str | None, allowed_states: tuple[str, ...]) -> str:
 
 @edit_sites_bp.route("/")
 @login_required
-@require_level(1)
+@require_level(EDIT_SITES_VIEW_LEVEL)
 def list_records():
     """Display the list of registered sites along with available fields."""
     data = load_data(DATA_FILE)
@@ -142,7 +144,7 @@ def list_records():
 
 @edit_sites_bp.route("/edit/<int:record_index>", methods=["GET", "POST"])
 @login_required
-@require_level(4)
+@require_level(EDIT_SITES_EDIT_LEVEL)
 def edit_record(record_index: int):
     """Edit the site identified by ``record_index``."""
     data = load_data(DATA_FILE)
@@ -224,7 +226,7 @@ def edit_record(record_index: int):
 
 @edit_sites_bp.route("/add", methods=["GET", "POST"])
 @login_required
-@require_level(4)
+@require_level(EDIT_SITES_EDIT_LEVEL)
 def add_record():
     """Create a new site entry."""
     data = load_data(DATA_FILE)
@@ -317,7 +319,7 @@ def add_record():
 
 @edit_sites_bp.route("/regenerate-map", methods=["POST"])
 @login_required
-@require_level(4)
+@require_level(EDIT_SITES_EDIT_LEVEL)
 def regenerate_map():
     """Regenerate the static map HTML and save to static/global/ouvrages.html."""
     try:
@@ -375,3 +377,4 @@ def _validate_request(
         errors.append("ETAT hors liste.")
 
     return errors
+

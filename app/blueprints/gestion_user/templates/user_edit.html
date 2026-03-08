@@ -3,56 +3,75 @@
 {% block title %}Modifier un utilisateur{% endblock %}
 
 {% block content %}
+<h1>Modifier un utilisateur</h1>
 
-    <!-- Formulaire de modification -->
-    <form id="edit-user-form" method="POST" action="{{ url_for('users.edit_user', login=edit_user['Login']) }}">
+<form id="edit-user-form" method="POST" action="{{ url_for('users.edit_user', login=edit_target_login) }}">
+    <fieldset>
+        <legend>Identite</legend>
+
         <label for="nom">Nom :</label>
-        <input type="text" id="nom" name="nom" value="{{ edit_user['Nom'] }}" required><br><br>
+        <input type="text" id="nom" name="nom" value="{{ edit_user.get('Nom', '') }}" required>
 
-        <label for="prenom">Prénom :</label>
-        <input type="text" id="prenom" name="prenom" value="{{ edit_user['Prenom'] }}" required><br><br>
+        <label for="prenom">Prenom :</label>
+        <input type="text" id="prenom" name="prenom" value="{{ edit_user.get('Prenom', '') }}" required>
+
+        <label for="login">Login :</label>
+        <input type="text" id="login" name="login" value="{{ edit_user.get('Login', '') }}" required>
 
         <label for="email">Email :</label>
-        <input type="email" id="email" name="email" value="{{ edit_user['Email'] }}" required><br><br>
+        <input type="email" id="email" name="email" value="{{ edit_user.get('Email', '') }}" required>
+    </fieldset>
+
+    <fieldset>
+        <legend>Droits et etat</legend>
 
         <label for="niveau_acces">Niveau d'acces :</label>
         <select id="niveau_acces" name="niveau_acces" required>
             {% for level, label in access_options %}
                 <option value="{{ level }}" {% if edit_user.get('Niveau acces') == level %}selected{% endif %}>{{ label }}</option>
             {% endfor %}
-        </select><br><br>
+        </select>
 
         <label>
-            <input type="checkbox" name="notification" {% if edit_user['Notification'] %}checked{% endif %}>
+            <input type="checkbox" id="notification" name="notification" {% if edit_user.get('Notification') %}checked{% endif %}>
             Recevoir des notifications
-        </label><br><br>
-        {% if can_reset_password %}
-        <fieldset>
-            <legend>Reinitialiser le mot de passe (optionnel)</legend>
-            <label for="new_password">Nouveau mot de passe :</label>
-            <input type="password" id="new_password" name="new_password" autocomplete="new-password"><br><br>
+        </label>
 
-            <label for="confirm_password">Confirmer le mot de passe :</label>
-            <input type="password" id="confirm_password" name="confirm_password" autocomplete="new-password"><br><br>
-        </fieldset>
-        {% endif %}
-        <!-- Ligne de separation-->
-        <hr>
+        <label>
+            <input type="checkbox" id="first_login" name="first_login" {% if edit_user.get('First_Login') %}checked{% endif %}>
+            Obliger le changement de mot de passe au premier LOGIN
+        </label>
+    </fieldset>
+
+    <fieldset>
+        <legend>Contrats</legend>
+        <label for="contrat">Contrat (un contrat par ligne ou separe par virgule) :</label>
+        <textarea id="contrat" name="contrat" rows="6">{{ edit_user.get('contracts_text', '') }}</textarea>
+    </fieldset>
+
+    {% if can_reset_password %}
+    <fieldset>
+        <legend>Reinitialiser le mot de passe (optionnel)</legend>
+        <label for="new_password">Nouveau mot de passe :</label>
+        <input type="password" id="new_password" name="new_password" autocomplete="new-password">
+
+        <label for="confirm_password">Confirmer le mot de passe :</label>
+        <input type="password" id="confirm_password" name="confirm_password" autocomplete="new-password">
+    </fieldset>
+    {% endif %}
+</form>
+
+<hr>
+
+<div class="actions u-mt-2">
+    <button type="submit" form="edit-user-form" class="btn primary btn-icon">Enregistrer</button>
+
+    <form method="POST" action="{{ url_for('users.delete_user', login=edit_target_login) }}" style="display: inline;">
+        <button type="submit" class="btn danger btn-icon icon-delete" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
     </form>
 
-    <!-- Boutons -->
-    <div class="actions u-mt-2">
-        <button type="submit" form="edit-user-form" class="btn primary btn-icon">💾 Enregistrer</button>
-
-        <form method="POST" action="{{ url_for('users.delete_user', login=edit_user['Login']) }}" style="display: inline;">
-            <button type="submit" class="btn danger btn-icon icon-delete" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
-        </form>
-
-        <a href="{{ url_for('users.list_users') }}" class="btn secondary btn-icon icon-back">Annuler</a>
-    </div>
+    <a href="{{ url_for('users.list_users') }}" class="btn secondary btn-icon icon-back">Annuler</a>
+</div>
 
 {% endblock %}
-
-
-
 

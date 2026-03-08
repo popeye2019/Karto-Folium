@@ -8,13 +8,14 @@ from app.utils.auth import login_required, require_level
 from app.utils.utils_json import get_field_names, load_json_file as load_data
 
 DATA_FILE = "./app/data/users/users.json"
+CHAMPS_ACCESS_LEVEL = 1
 
 champs_bp = Blueprint("champs_sites", __name__, template_folder="templates")
 
 
 @champs_bp.route("/")
 @login_required
-@require_level(1)
+@require_level(CHAMPS_ACCESS_LEVEL)
 def display_fields():
     """Display the JSON field names available for user records."""
     current_app.logger.info("Rendering fields list")

@@ -1,0 +1,76 @@
+Route Verification Report
+========================
+Generated at: 2026-03-07 12:33:53
+Project root: C:\Users\franc\Documents\Programmation\python\Karto-Folium
+
+Summary
+-------
+Total routes: 46
+Routes with login_required: 46
+Routes with require_level: 46
+
+Routes by file
+--------------
+- app\blueprints\Contrat\contrats.py: 2
+- app\blueprints\Contrat\regions.py: 3
+- app\blueprints\carto\main.py: 2
+- app\blueprints\carto_modif\edit_map.py: 1
+- app\blueprints\carto_modif\edit_sites.py: 4
+- app\blueprints\carto_modif\type_sites.py: 6
+- app\blueprints\champs\champs.py: 1
+- app\blueprints\gestion_user\users.py: 11
+- app\blueprints\notif\notif.py: 7
+- app\blueprints\pr_maint\__init__.py: 4
+- app\blueprints\pr_maint\__init__backup.py: 1
+- app\blueprints\rights\niveau_user.py: 4
+
+Route details
+-------------
+#  | File                                      | Route                    | Function                | Methods  | Login | Level                        
+---+-------------------------------------------+--------------------------+-------------------------+----------+-------+------------------------------
+1  | app\blueprints\Contrat\contrats.py        | /departments             | select_departments      | GET,POST | yes   | CONTRATS_ACCESS_LEVEL (3)    
+2  | app\blueprints\Contrat\contrats.py        | /liste                   | list_regions            | GET,POST | yes   | CONTRATS_ACCESS_LEVEL (3)    
+3  | app\blueprints\Contrat\regions.py         | /                        | home                    | GET      | yes   | REGION_ACCESS_LEVEL (1)      
+4  | app\blueprints\Contrat\regions.py         | /map                     | map_view                | GET      | yes   | REGION_ACCESS_LEVEL (1)      
+5  | app\blueprints\Contrat\regions.py         | /region/<region_id>      | region_details          | GET      | yes   | REGION_ACCESS_LEVEL (1)      
+6  | app\blueprints\carto\main.py              | /                        | home                    | GET      | yes   | MAIN_ACCESS_LEVEL (1)        
+7  | app\blueprints\carto\main.py              | /upload-test-icon        | upload_test_icon        | POST     | yes   | MAIN_ACCESS_LEVEL (1)        
+8  | app\blueprints\carto_modif\edit_map.py    | /map                     | get_map                 | GET      | yes   | EDIT_MAP_ACCESS_LEVEL (1)    
+9  | app\blueprints\carto_modif\edit_sites.py  | /                        | list_records            | GET      | yes   | EDIT_SITES_VIEW_LEVEL (1)    
+10 | app\blueprints\carto_modif\edit_sites.py  | /add                     | add_record              | GET,POST | yes   | EDIT_SITES_EDIT_LEVEL (4)    
+11 | app\blueprints\carto_modif\edit_sites.py  | /edit/<int:record_index> | edit_record             | GET,POST | yes   | EDIT_SITES_EDIT_LEVEL (4)    
+12 | app\blueprints\carto_modif\edit_sites.py  | /regenerate-map          | regenerate_map          | POST     | yes   | EDIT_SITES_EDIT_LEVEL (4)    
+13 | app\blueprints\carto_modif\type_sites.py  | /                        | list_type_sites         | GET      | yes   | TYPE_SITES_ACCESS_LEVEL (4)  
+14 | app\blueprints\carto_modif\type_sites.py  | /add                     | add_type_site           | GET,POST | yes   | TYPE_SITES_ACCESS_LEVEL (4)  
+15 | app\blueprints\carto_modif\type_sites.py  | /delete/<int:type_index> | delete_type_site        | GET,POST | yes   | TYPE_SITES_ACCESS_LEVEL (4)  
+16 | app\blueprints\carto_modif\type_sites.py  | /edit/<int:type_index>   | edit_type_site          | GET,POST | yes   | TYPE_SITES_ACCESS_LEVEL (4)  
+17 | app\blueprints\carto_modif\type_sites.py  | /icon/<path:filename>    | type_icon               | GET      | yes   | TYPE_SITES_ACCESS_LEVEL (4)  
+18 | app\blueprints\carto_modif\type_sites.py  | /upload-icon             | upload_type_icon        | POST     | yes   | TYPE_SITES_ACCESS_LEVEL (4)  
+19 | app\blueprints\champs\champs.py           | /                        | display_fields          | GET      | yes   | CHAMPS_ACCESS_LEVEL (1)      
+20 | app\blueprints\gestion_user\users.py      | /                        | list_users              | GET      | yes   | USERS_ADMIN_LEVEL (5)        
+21 | app\blueprints\gestion_user\users.py      | /add                     | add_user                | GET,POST | yes   | USERS_ADMIN_LEVEL (5)        
+22 | app\blueprints\gestion_user\users.py      | /backup                  | backup_restore          | GET      | yes   | USERS_ADMIN_LEVEL (5)        
+23 | app\blueprints\gestion_user\users.py      | /backup/download         | download_backup         | GET      | yes   | USERS_ADMIN_LEVEL (5)        
+24 | app\blueprints\gestion_user\users.py      | /backup/restore          | restore_backup          | POST     | yes   | USERS_ADMIN_LEVEL (5)        
+25 | app\blueprints\gestion_user\users.py      | /delete/<login>          | delete_user             | POST     | yes   | USERS_ADMIN_LEVEL (5)        
+26 | app\blueprints\gestion_user\users.py      | /edit/<login>            | edit_user               | GET,POST | yes   | USERS_ADMIN_LEVEL (5)        
+27 | app\blueprints\gestion_user\users.py      | /login-journal           | login_journal           | GET      | yes   | USERS_ADMIN_LEVEL (5)        
+28 | app\blueprints\gestion_user\users.py      | /login-journal/reset     | reset_login_journal     | POST     | yes   | USERS_ADMIN_LEVEL (5)        
+29 | app\blueprints\gestion_user\users.py      | /rights                  | list_rights             | GET      | yes   | USERS_VIEW_LEVEL (1)         
+30 | app\blueprints\gestion_user\users.py      | /rights/edit/<int:level> | edit_right              | GET,POST | yes   | USERS_ADMIN_LEVEL (5)        
+31 | app\blueprints\notif\notif.py             | /                        | show_index              | GET      | yes   | NOTIFICATION_ACCESS_LEVEL (3)
+32 | app\blueprints\notif\notif.py             | /create                  | create_from_form        | GET,POST | yes   | NOTIFICATION_ACCESS_LEVEL (3)
+33 | app\blueprints\notif\notif.py             | /notifications/<user_id> | get_notifications       | GET      | yes   | NOTIFICATION_ACCESS_LEVEL (3)
+34 | app\blueprints\notif\notif.py             | /notify                  | create_notification     | POST     | yes   | NOTIFICATION_ACCESS_LEVEL (3)
+35 | app\blueprints\notif\notif.py             | /read/<notif_id>         | mark_as_read            | POST     | yes   | NOTIFICATION_ACCESS_LEVEL (3)
+36 | app\blueprints\notif\notif.py             | /send-multi              | send_multi_notification | GET,POST | yes   | NOTIFICATION_ACCESS_LEVEL (3)
+37 | app\blueprints\notif\notif.py             | /view                    | view_notifications      | GET      | yes   | NOTIFICATION_ACCESS_LEVEL (3)
+38 | app\blueprints\pr_maint\__init__.py       | /                        | maintenance_home        | GET      | yes   | MAINTENANCE_ACCESS_LEVEL (3) 
+39 | app\blueprints\pr_maint\__init__.py       | /geolocalisation         | localisation_page       | GET      | yes   | MAINTENANCE_ACCESS_LEVEL (3) 
+40 | app\blueprints\pr_maint\__init__.py       | /interventions           | create_intervention     | POST     | yes   | MAINTENANCE_ACCESS_LEVEL (3) 
+41 | app\blueprints\pr_maint\__init__.py       | /recherche               | search_post             | GET      | yes   | MAINTENANCE_ACCESS_LEVEL (3) 
+42 | app\blueprints\pr_maint\__init__backup.py | /                        | maintenance_home        | GET      | yes   | MAINTENANCE_ACCESS_LEVEL (2) 
+43 | app\blueprints\rights\niveau_user.py      | /                        | index                   | GET      | yes   | RIGHTS_ADMIN_LEVEL (5)       
+44 | app\blueprints\rights\niveau_user.py      | /add                     | add_right               | GET,POST | yes   | RIGHTS_ADMIN_LEVEL (5)       
+45 | app\blueprints\rights\niveau_user.py      | /delete/<int:niveau>     | delete                  | POST     | yes   | RIGHTS_ADMIN_LEVEL (5)       
+46 | app\blueprints\rights\niveau_user.py      | /edit/<int:niveau>       | edit                    | GET,POST | yes   | RIGHTS_ADMIN_LEVEL (5)

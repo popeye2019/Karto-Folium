@@ -13,11 +13,12 @@ contrats_bp = Blueprint("contrats", __name__, template_folder="templates")
 
 REGION_FILE = "./app/data/geojson/region2020.geojson"
 DEPARTMENT_FILE = "./app/data/geojson/dept2020.geojson"
+CONTRATS_ACCESS_LEVEL = 3
 
 
 @contrats_bp.route("/liste", methods=["GET", "POST"])
 @login_required
-@require_level(3)
+@require_level(CONTRATS_ACCESS_LEVEL)
 def list_regions():
     """Display available regions and collect selected entries."""
     geojson_data = load_json_file(REGION_FILE)
@@ -41,7 +42,7 @@ def list_regions():
 
 @contrats_bp.route("/departments", methods=["GET", "POST"])
 @login_required
-@require_level(3)
+@require_level(CONTRATS_ACCESS_LEVEL)
 def select_departments():
     """Display departments that belong to the previously selected regions."""
     departments_data = load_json_file(DEPARTMENT_FILE)

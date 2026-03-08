@@ -32,6 +32,7 @@ DEFAULT_LOGIN_BAN_FILE = "./app/data/users/login_bans.json"
 USER_FILE_PATH = DEFAULT_USER_FILE_PATH
 LOGIN_JOURNAL_FILE = DEFAULT_LOGIN_JOURNAL_FILE
 LOGIN_BAN_FILE = DEFAULT_LOGIN_BAN_FILE
+AUTH_ADMIN_LEVEL = 5
 
 
 def _users_file_path() -> str:
@@ -101,6 +102,38 @@ def _append_login_journal(
         save_json_file(_login_journal_file_path(), journal)
     except Exception as exc:  # pragma: no cover - defensive logging
         current_app.logger.exception("Unable to save login journal: %s", exc)
+
+
+def _update_user_last_connection(login_value: str, connected_at: str) -> None:
+    """Persist the latest successful connection timestamp for a user."""
+    try:
+        users = load_json_file(_users_file_path())
+    except FileNotFoundError:
+        current_app.logger.warning("User file missing while updating Date_connec: %s", _users_file_path())
+        return
+    except Exception as exc:  # pragma: no cover - defensive logging
+        current_app.logger.exception("Unable to load users for Date_connec update: %s", exc)
+        return
+
+    if not isinstance(users, list):
+        current_app.logger.warning("Unexpected users payload type for Date_connec update: %s", type(users).__name__)
+        return
+
+    updated = False
+    for record in users:
+        if isinstance(record, dict) and record.get("Login") == login_value:
+            record["Date_connec"] = connected_at
+            updated = True
+            break
+
+    if not updated:
+        current_app.logger.warning("Unable to update Date_connec: login %s not found", login_value)
+        return
+
+    try:
+        save_json_file(_users_file_path(), users)
+    except Exception as exc:  # pragma: no cover - defensive logging
+        current_app.logger.exception("Unable to save users after Date_connec update: %s", exc)
 
 
 def _now_utc() -> datetime:
@@ -298,6 +331,7 @@ def login():
         user = verify_user(login_value, password)
         if user:
             connected_at = datetime.now().isoformat(timespec="seconds")
+            _update_user_last_connection(user.get("Login", login_value), connected_at)
             session["user"] = {
                 "login": user["Login"],
                 "access_level": user.get("Niveau acces", 0),
@@ -349,7 +383,7 @@ def logout():
 
 @auth_bp.route("/about-config", methods=["GET"])
 @login_required
-@require_level(5)
+@require_level(AUTH_ADMIN_LEVEL)
 def about_config():
     """Return a sanitized view of app configuration for admins."""
     safe_config: dict[str, object] = {}

@@ -7,11 +7,12 @@ from flask import Blueprint, render_template, request
 from app.utils.auth import login_required, require_level
 
 edit_map_bp = Blueprint("edit_map", __name__, template_folder="templates")
+EDIT_MAP_ACCESS_LEVEL = 1
 
 
 @edit_map_bp.route("/map")
 @login_required
-@require_level(1)
+@require_level(EDIT_MAP_ACCESS_LEVEL)
 def get_map():
     """Return an interactive map that exposes the selected coordinates."""
     latitude = request.args.get("lat", type=float, default=46.5)
