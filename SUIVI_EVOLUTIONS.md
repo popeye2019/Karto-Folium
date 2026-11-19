@@ -1,5 +1,26 @@
 # Suivi des évolutions Karto-Folium
 
+## 19 novembre 2026 — Catalogue SQLite
+
+- Demande : migrer le catalogue avec imports JSON/CSV ; règle confirmée :
+  un site appartient à un seul contrat.
+- Base locale propre, identique à GitHub `main`, commit
+  `b42aaf1a05911098013805c385026fd676145b46` avant préparation.
+- Branche séparée : `codex/architecture-sqlite-metier`.
+- Schéma relationnel, catalogue transactionnel, commande de migration avec
+  simulation, imports JSON/CSV, export et sauvegarde/restauration ajoutés.
+- Consultation, recherche, édition, types, contrats, maintenance et Folium
+  raccordés au catalogue actif ; identifiants d'édition stables en mode SQL.
+- Page de gestion des données et contrat obligatoire dans les formulaires.
+- 144 tests réussis, dont 29 nouveaux cas SQLite ; essai Folium réel sans
+  `recap.json` et essai navigateur sur données fictives réussis.
+- Mode JSON conservé par défaut ; aucune bascule de production ni migration
+  des données réelles, absentes du dépôt local. Comptes, journaux,
+  notifications et commentaires restent en JSON dans ce périmètre.
+- Avant activation : inventorier les sources réelles, renseigner les contrats
+  manquants, simuler, comparer les comptes et tester en recette.
+- Détails dans `ARCHITECTURE_SQLITE.md` et `MIGRATION_SQLITE.md`.
+
 ## 19 novembre 2026 — Fiabiliser la saisie des coordonnées GPS
 
 Demande : améliorer le site et poursuivre ses évolutions par des changements

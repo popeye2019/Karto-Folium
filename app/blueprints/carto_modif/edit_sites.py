@@ -17,12 +17,15 @@ from flask import (
 
 from app.utils.utils_json import (
     get_field_names,
+)
+from app.utils.site_store import (
     get_next_index,
     load_json_file as load_data,
     save_json_file as save_data,
 )
 from app.utils.auth import login_required, require_level
 from app.utils.coordinates import map_center, parse_coordinate
+from app.utils.site_store import catalogue, enabled, validate_site
 
 DATA_FILE = "./app/data/sites/recap.json"
 TYPE_FILE = "./app/data/sites/type_site.json"
@@ -138,7 +141,7 @@ def _normalize_state(value: str | None, allowed_states: tuple[str, ...]) -> str:
 def list_records():
     """Display the list of registered sites along with available fields."""
     data = load_data(DATA_FILE)
-    fields = get_field_names(data)
+    fields = get_field_names(data) if data else []
 
     return render_template("liste_sites.html", fields=fields, records=data, types=_get_site_types())
 
@@ -149,14 +152,18 @@ def list_records():
 def edit_record(record_index: int):
     """Edit the site identified by ``record_index``."""
     data = load_data(DATA_FILE)
-    if record_index < 0 or record_index >= len(data):
+    if enabled():
+        position = next((i for i,r in enumerate(data) if int(r["INDEX"]) == record_index), -1)
+    else:
+        position = record_index
+    if position < 0 or position >= len(data):
         flash("Enregistrement introuvable.", "danger")
         return redirect(url_for("edit_sites.list_records"))
 
     site_states = _get_site_states()
     site_types = _get_site_types()
     communes = _get_communes_list()
-    record_data = data[record_index]
+    record_data = data[position]
 
     if request.method == "POST":
         selected_type = (request.form.get("TYPE") or record_data.get("TYPE", "")).strip()
@@ -165,6 +172,7 @@ def edit_record(record_index: int):
             if field != "INDEX":
                 record[field] = request.form.get(field, record[field])
         errors = _coordinate_errors(record.get("LAT"), record.get("LONG"))
+        errors.extend(validate_site(record))
         if site_types and selected_type not in site_types:
             errors.append("TYPE hors liste.")
         if errors:
@@ -204,7 +212,10 @@ def edit_record(record_index: int):
         if "TYPE" not in record_data:
             record_data["TYPE"] = selected_type or ""
 
-        save_data(DATA_FILE, data)
+        if enabled():
+            catalogue().save_site(record_data)
+        else:
+            save_data(DATA_FILE, data)
         flash("Enregistrement mis a jour avec succes.", "success")
         return redirect(url_for("edit_sites.list_records"))
 
@@ -262,6 +273,7 @@ def add_record():
             etat_raw,
             site_states,
         )
+        errors.extend(validate_site({**dict(request.form), "INDEX": str(next_index)}))
         if errors:
             for message in errors:
                 flash(message, "danger")
@@ -291,7 +303,7 @@ def add_record():
         longitude = float(longitude_raw)
         etat_value = _normalize_state(etat_raw or site_states[0], site_states)
 
-        new_record: dict[str, Any] = {field: "" for field in get_field_names(data) or []}
+        new_record: dict[str, Any] = {field: "" for field in (get_field_names(data) if data else [])}
         new_record.update(
             {
                 "INDEX": str(next_index),
@@ -305,11 +317,14 @@ def add_record():
         )
 
         for field_name in request.form.keys():
-            if field_name not in new_record:
+            if field_name not in {"INDEX", "COMMUNE", "NOM", "TYPE", "LAT", "LONG", "ETAT"}:
                 new_record[field_name] = request.form.get(field_name, "")
 
         data.append(new_record)
-        save_data(DATA_FILE, data)
+        if enabled():
+            catalogue().save_site(new_record, new=True)
+        else:
+            save_data(DATA_FILE, data)
         flash("Site ajoute.", "success")
         return redirect(url_for("edit_sites.list_records"))
 

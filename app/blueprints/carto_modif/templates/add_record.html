@@ -4,6 +4,21 @@
 <section class="page-section">
   <h2>Ajouter un site</h2>
   <form method="post" class="form-panel">
+    {% if catalogue_enabled %}
+    <div class="field">
+      <label for="CONTRAT">Contrat *</label>
+      <select id="CONTRAT" name="CONTRAT" required>
+        <option value="">- choisir -</option>
+        {% for contrat in catalogue_contracts %}
+        <option value="{{ contrat.reference }}" {% if record.get('CONTRAT') == contrat.reference %}selected{% endif %}>{{ contrat.reference }} — {{ contrat.nom }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="CODE_INSEE">Code INSEE (pour distinguer les communes homonymes)</label>
+      <input id="CODE_INSEE" name="CODE_INSEE" value="{{ record.get('CODE_INSEE', '') }}">
+    </div>
+    {% endif %}
     <div class="field">
       <label>INDEX</label>
       <input type="text" value="{{ record.INDEX }}" readonly>

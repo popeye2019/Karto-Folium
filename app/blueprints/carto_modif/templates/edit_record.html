@@ -10,6 +10,12 @@
         {% if field == 'INDEX' %}
           <input type="text" id="INDEX_display" value="{{ value }}" readonly>
           <input type="hidden" name="INDEX" value="{{ value }}">
+        {% elif field == 'CONTRAT' and catalogue_enabled %}
+          <select id="CONTRAT" name="CONTRAT" required>
+            {% for contrat in catalogue_contracts %}
+            <option value="{{ contrat.reference }}" {% if value == contrat.reference %}selected{% endif %}>{{ contrat.reference }} — {{ contrat.nom }}</option>
+            {% endfor %}
+          </select>
         {% elif field == 'TYPE' %}
           <select id="TYPE" name="TYPE" required>
             <option value="">- choisir -</option>

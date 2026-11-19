@@ -202,3 +202,7 @@ app/data/users/*
 !app/data/users/.gitkeep
 
 .env.prod
+instance/
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm

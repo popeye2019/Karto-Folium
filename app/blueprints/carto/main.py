@@ -6,7 +6,7 @@ from flask import Blueprint, current_app, flash, jsonify, redirect, render_templ
 
 from app.utils.auth import login_required, require_level
 from app.utils.import_fichier import save_upload, UploadError
-from app.utils.utils_json import load_json_file
+from app.utils.site_store import load_json_file
 
 main_bp = Blueprint("main", __name__, template_folder="templates")
 SITE_DATA_PATH = "./app/data/sites/recap.json"

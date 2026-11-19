@@ -18,12 +18,13 @@ from flask import (
     abort,
 )
 
-from app.utils.utils_json import (
+from app.utils.site_store import (
     load_json_file as load_data,
     save_json_file as save_data,
 )
 from app.utils.import_fichier import save_upload, UploadError
 from app.utils.auth import login_required, require_level
+from app.utils.site_store import enabled
 
 TYPE_FILE = "./app/data/sites/type_site.json"
 DATA_FILE = "./app/data/sites/recap.json"
@@ -225,6 +226,11 @@ def edit_type_site(type_index: int):
     if request.method == "POST":
         updated_payload = _form_payload(existing=type_payload)
         errors = _validate_payload(updated_payload, editing=True)
+        if enabled() and updated_payload["type"] != type_payload["type"]:
+            if _type_in_use(type_payload["type"]):
+                errors.append("Le libellé d'un type utilisé ne peut pas être modifié.")
+            if any(t["type"] == updated_payload["type"] for i,t in enumerate(types) if i != type_index):
+                errors.append("Ce TYPE existe déjà.")
 
         if errors:
             for message in errors:
@@ -255,7 +261,7 @@ def delete_type_site(type_index: int):
 
     if request.method == "POST":
         if _type_in_use(type_label):
-            flash("Impossible de supprimer: le type est utilisé dans recap.json.", "danger")
+            flash("Impossible de supprimer : le type est utilisé par des sites.", "danger")
             return redirect(url_for("type_sites.list_type_sites"))
 
         # Icône conservée pour permettre une réutilisation future.

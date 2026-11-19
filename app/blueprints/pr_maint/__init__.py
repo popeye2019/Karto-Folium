@@ -10,7 +10,7 @@ from pathlib import Path
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 
 from app.utils.auth import login_required, require_level
-from app.utils.utils_json import load_json_file as load_data
+from app.utils.site_store import load_json_file as load_data
 
 pr_maint_bp = Blueprint("pr_maint", __name__, template_folder="templates")
 
