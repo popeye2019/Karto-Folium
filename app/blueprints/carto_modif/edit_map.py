@@ -5,6 +5,7 @@ from __future__ import annotations
 import folium
 from flask import Blueprint, render_template, request
 from app.utils.auth import login_required, require_level
+from app.utils.coordinates import map_center
 
 edit_map_bp = Blueprint("edit_map", __name__, template_folder="templates")
 EDIT_MAP_ACCESS_LEVEL = 1
@@ -15,8 +16,7 @@ EDIT_MAP_ACCESS_LEVEL = 1
 @require_level(EDIT_MAP_ACCESS_LEVEL)
 def get_map():
     """Return an interactive map that exposes the selected coordinates."""
-    latitude = request.args.get("lat", type=float, default=46.5)
-    longitude = request.args.get("lon", type=float, default=2.5)
+    latitude, longitude = map_center(request.args.get("lat"), request.args.get("lon"))
 
     folium_map = folium.Map(location=[latitude, longitude], zoom_start=15, control_scale=True)
     map_name = folium_map.get_name()
