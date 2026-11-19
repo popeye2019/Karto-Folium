@@ -4,6 +4,10 @@
 
 {% block content %}
 <h1>Sauvegarde et Restauration</h1>
+{% if catalogue_enabled %}
+<p>Les sites, communes, types et contrats sont stockés dans SQLite. Les opérations JSON ci-dessous ne les sauvegardent ni ne les restaurent.
+<a href="{{ url_for('catalogue.manage') }}">Sauvegarder le catalogue SQLite</a>.</p>
+{% endif %}
 
 <div class="card" style="margin-top: 0.75rem; padding: 0.75rem 1rem;">
     <h2 style="margin: 0 0 0.25rem 0; font-size: 1.1rem;">Administration des donnees JSON</h2>

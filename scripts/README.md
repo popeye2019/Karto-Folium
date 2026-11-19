@@ -1,6 +1,17 @@
 Scripts
 =======
 
+catalogue_sqlite.py
+------------------
+
+Initialisation, simulation de migration JSON, import JSON/CSV, contrôle
+d'intégrité et sauvegarde/restauration du catalogue SQLite.
+La commande `prepare --report chemin/rapport.json` crée les tables puis vérifie
+la migration sur une copie temporaire ; `--data-dir` désigne les JSON sources.
+Exécuter `python scripts/catalogue_sqlite.py --help` ; procédure complète
+dans `MIGRATION_SQLITE.md` à la racine. La destination de restauration doit
+être une nouvelle base et les fichiers sources ne sont jamais supprimés.
+
 verify_routes.py
 -----------------
 

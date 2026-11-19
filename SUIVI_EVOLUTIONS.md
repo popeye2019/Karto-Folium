@@ -1,5 +1,45 @@
 # Suivi des évolutions Karto-Folium
 
+## 19 novembre 2026 — Préparation concrète des tables et de la migration
+
+- Vérification avant synchronisation : branche locale et GitHub au même commit
+  `e5c0815`, `main` toujours au commit `b42aaf1`. Travail poursuivi sur la branche
+  séparée `codex/architecture-sqlite-metier` de la Pull Request nº 2.
+- Création de la base locale ignorée par Git `instance/catalogue.sqlite3`,
+  contenant les six tables du catalogue, sans données fictives ou réelles.
+- Ajout de `prepare` : création des tables et simulation de migration sur une
+  copie temporaire avec rapport JSON, empreintes des sources et comptes.
+- Rapport local `instance/rapport-preparation.json` : tables prêtes, aucune
+  donnée importée, migration des données non vérifiable car les sources
+  métier sont absentes de `app/data/sites`.
+- Correction de la reconstruction des communes homonymes depuis les sites et
+  refus des codes INSEE associés à des noms contradictoires. Préservation des
+  libellés de contrats existants lors d'un nouvel import de migration.
+- 154 tests réussis, dont 10 nouveaux tests de préparation et de reprise.
+- Reste à fournir : emplacement des JSON réels et rattachements aux contrats
+  lorsque ceux-ci ne sont pas renseignés. Aucun déploiement ni activation SQL.
+
+## 19 novembre 2026 — Catalogue SQLite
+
+- Demande : migrer le catalogue avec imports JSON/CSV ; règle confirmée :
+  un site appartient à un seul contrat.
+- Base locale propre, identique à GitHub `main`, commit
+  `b42aaf1a05911098013805c385026fd676145b46` avant préparation.
+- Branche séparée : `codex/architecture-sqlite-metier`.
+- Schéma relationnel, catalogue transactionnel, commande de migration avec
+  simulation, imports JSON/CSV, export et sauvegarde/restauration ajoutés.
+- Consultation, recherche, édition, types, contrats, maintenance et Folium
+  raccordés au catalogue actif ; identifiants d'édition stables en mode SQL.
+- Page de gestion des données et contrat obligatoire dans les formulaires.
+- 144 tests réussis, dont 29 nouveaux cas SQLite ; essai Folium réel sans
+  `recap.json` et essai navigateur sur données fictives réussis.
+- Mode JSON conservé par défaut ; aucune bascule de production ni migration
+  des données réelles, absentes du dépôt local. Comptes, journaux,
+  notifications et commentaires restent en JSON dans ce périmètre.
+- Avant activation : inventorier les sources réelles, renseigner les contrats
+  manquants, simuler, comparer les comptes et tester en recette.
+- Détails dans `ARCHITECTURE_SQLITE.md` et `MIGRATION_SQLITE.md`.
+
 ## 19 novembre 2026 — Fiabiliser la saisie des coordonnées GPS
 
 Demande : améliorer le site et poursuivre ses évolutions par des changements

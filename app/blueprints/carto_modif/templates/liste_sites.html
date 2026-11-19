@@ -4,6 +4,9 @@
 
 {% block content %}
 <h2>Liste des sites</h2>
+{% if catalogue_enabled and user and user.access_level >= 5 %}
+<p><a class="btn" href="{{ url_for('catalogue.manage') }}">Contrats, imports et sauvegarde SQLite</a></p>
+{% endif %}
 
 {% if user and user.access_level >= 4 %}
 <p><a href="{{ url_for('edit_sites.add_record') }}" class="btn primary btn-icon">Ajouter un nouveau site</a></p>
@@ -50,7 +53,7 @@
             <td>{{ record['TYPE'] }}</td>
             <td>
                 {% if user and user.access_level >= 4 %}
-                <a href="{{ url_for('edit_sites.edit_record', record_index=loop.index0) }}" class="btn secondary btn-icon">
+                <a href="{{ url_for('edit_sites.edit_record', record_index=record.INDEX if catalogue_enabled else loop.index0) }}" class="btn secondary btn-icon">
                     Modifier
                 </a>
                 {% endif %}

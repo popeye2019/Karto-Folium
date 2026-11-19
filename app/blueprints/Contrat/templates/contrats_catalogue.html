@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Contrats{% endblock %}
+{% block content %}
+<h1>Contrats</h1>
+<p>Un site est rattaché à un seul contrat. Un contrat peut regrouper plusieurs sites et communes.</p>
+<table><thead><tr><th>Référence</th><th>Nom</th><th>Sites</th><th>Communes</th></tr></thead><tbody>
+{% for contract in contracts %}
+<tr><td>{{ contract.reference }}</td><td>{{ contract.nom }}</td><td>{{ contract.site_count }}</td><td>{{ contract.commune_count }}</td></tr>
+{% else %}<tr><td colspan="4">Aucun contrat enregistré.</td></tr>{% endfor %}
+</tbody></table>
+<h2>Créer un contrat</h2>
+<form method="post" style="display:grid;gap:.75rem;max-width:35rem;">
+  <label for="reference">Référence</label><input id="reference" name="REFERENCE" required>
+  <label for="nom">Nom</label><input id="nom" name="NOM" required>
+  <button type="submit">Créer le contrat</button>
+</form>
+{% if user and user.access_level >= 5 %}<p><a href="{{ url_for('catalogue.manage') }}">Imports JSON/CSV et sauvegarde du catalogue</a></p>{% endif %}
+{% endblock %}

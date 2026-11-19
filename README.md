@@ -2,6 +2,11 @@
 
 Ce projet affiche des données JSON sur une carte avec des icônes différentes suivant les objets.
 
+Le catalogue métier peut également utiliser SQLite : contrats, communes, types
+et sites, avec un seul contrat par site. Les imports JSON et CSV restent
+disponibles. Le mode historique JSON reste actif par défaut jusqu'à migration.
+Voir [l'architecture](ARCHITECTURE_SQLITE.md) et la [procédure de migration](MIGRATION_SQLITE.md).
+
 Vérifications d'accès et routes
 -------------------------------
 

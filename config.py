@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 
 def _env_bool(name: str, default: bool) -> bool:
@@ -31,6 +32,8 @@ class Config:
 
     APP_NAME = "Karto-Folium"
     APP_VERSION = "V0.4.0"
+    CATALOGUE_STORAGE = os.getenv("CATALOGUE_STORAGE", "json")
+    CATALOGUE_DATABASE = os.getenv("CATALOGUE_DATABASE", str(Path(__file__).resolve().parent / "instance" / "catalogue.sqlite3"))
 
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-not-safe")
     DEBUG = _env_bool("FLASK_DEBUG", False)

@@ -85,6 +85,17 @@ def create_app(config_object: str | object = "config.Config") -> Flask:
     _register_blueprints(app)
     _register_context_processors(app)
     _register_filters(app)
+    from .utils.site_store import catalogue, enabled
+    if app.config.get("CATALOGUE_STORAGE", "json") not in {"json", "sqlite"}:
+        raise ValueError("CATALOGUE_STORAGE doit valoir json ou sqlite.")
+    with app.app_context():
+        if enabled():
+            catalogue().check()
+
+    @app.context_processor
+    def inject_catalogue():
+        active = enabled()
+        return {"catalogue_enabled": active, "catalogue_contracts": catalogue().contracts() if active else []}
 
     return app
 
@@ -135,6 +146,7 @@ def _register_blueprints(app: Flask) -> None:
     from .blueprints.gestion_user.users import users_bp
     from .blueprints.notif.notif import notif_bp
     from .blueprints.rights.niveau_user import rights_bp
+    from .blueprints.catalogue import catalogue_bp
 
     app.register_blueprint(carto_main_bp)
     app.register_blueprint(auth_bp, url_prefix="/auth")
@@ -148,6 +160,7 @@ def _register_blueprints(app: Flask) -> None:
     app.register_blueprint(notif_bp, url_prefix="/notif")
     app.register_blueprint(contrats_bp, url_prefix="/contrats")
     app.register_blueprint(region_bp, url_prefix="/regions")
+    app.register_blueprint(catalogue_bp, url_prefix="/catalogue")
 
 
 def _register_context_processors(app: Flask) -> None:

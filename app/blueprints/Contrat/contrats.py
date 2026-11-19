@@ -4,10 +4,11 @@ from __future__ import annotations
 
 from typing import Iterable
 
-from flask import Blueprint, redirect, render_template, request, session, url_for
+from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 from app.utils.auth import login_required, require_level
 
 from app.utils.utils_json import load_json_file
+from app.utils.site_store import catalogue, enabled
 
 contrats_bp = Blueprint("contrats", __name__, template_folder="templates")
 
@@ -21,6 +22,18 @@ CONTRATS_ACCESS_LEVEL = 3
 @require_level(CONTRATS_ACCESS_LEVEL)
 def list_regions():
     """Display available regions and collect selected entries."""
+    if enabled():
+        if request.method == "POST":
+            try:
+                reference = (request.form.get("REFERENCE") or "").strip()
+                if any(c["reference"] == reference for c in catalogue().contracts()):
+                    raise ValueError("Cette référence existe déjà.")
+                catalogue().import_bundle({"contrats": [{"REFERENCE": reference, "NOM": request.form.get("NOM", "")}]}, source="création contrat")
+                flash("Contrat créé.", "success")
+            except ValueError as exc:
+                flash(str(exc), "danger")
+            return redirect(url_for("contrats.list_regions"))
+        return render_template("contrats_catalogue.html", contracts=catalogue().contracts())
     geojson_data = load_json_file(REGION_FILE)
     regions = _extract_regions(geojson_data["features"])
 

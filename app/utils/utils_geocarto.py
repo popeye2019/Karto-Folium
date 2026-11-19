@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import unicodedata
+from app.utils.site_store import load_json_file
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Dict
@@ -103,8 +104,8 @@ def load_geo_datasets(
     data_dir = base_path / "data" / "sites"
 
     geo = _read_json(data_dir / "co.geojson")
-    liste_ouvrages = _read_json(data_dir / "recap.json")
-    liste_commune_asst_collectif = _read_json(
+    liste_ouvrages = load_json_file(data_dir / "recap.json")
+    liste_commune_asst_collectif = load_json_file(
         data_dir / "commune_asst_collectif.json"
     )
 
@@ -136,7 +137,7 @@ def load_type_metadata(base_dir: Path | str) -> Dict[str, TypeMetadata]:
     if base_path.is_file():
         base_path = base_path.parent
     metadata_path = base_path / "data" / "sites" / "type_site.json"
-    raw_entries = _read_json(metadata_path)
+    raw_entries = load_json_file(metadata_path)
     if not isinstance(raw_entries, list):
         raise ValueError("type_site.json doit contenir une liste")
 

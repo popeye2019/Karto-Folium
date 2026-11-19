@@ -44,15 +44,14 @@ def main() -> int:
     from app.utils.geocarto_lib import generate_map
 
     args = parse_args()
+    from app import create_app
+    app = create_app()
     try:
-        out_path = generate_map(
-            output_path=args.out,
-            lat=args.lat,
-            lon=args.lon,
-            zoom=args.zoom,
-            select_layer=args.layer,
-            exclusive=args.exclusive,
-        )
+        with app.app_context():
+            out_path = generate_map(
+                output_path=args.out, lat=args.lat, lon=args.lon,
+                zoom=args.zoom, select_layer=args.layer, exclusive=args.exclusive,
+            )
     except Exception as exc:  # pragma: no cover
         print(f"Échec de génération: {exc}")
         return 1
