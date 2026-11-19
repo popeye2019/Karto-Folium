@@ -130,7 +130,7 @@ tant qu'ils ne sont pas eux aussi raccordés à SQLite.
 - Sauvegarde SQLite et restauration d'une copie cohérente.
 - Suite de tests existante, complétée par les scénarios de migration.
 
-Résultat : **144 tests réussis**, dont 29 nouveaux cas SQLite. Un essai avec
+Résultat après préparation : **154 tests réussis**, dont 39 cas SQLite. Un essai avec
 Folium réel a généré une carte contenant le site SQL sans `recap.json`. Dans
 le navigateur, création d'un contrat puis changement du contrat d'un site,
 confirmé après réouverture de la fiche, sur données fictives.
@@ -138,5 +138,11 @@ confirmé après réouverture de la fiche, sur données fictives.
 Les sauvegardes SQLite et JSON sont distinctes, ce qui est indiqué dans
 l'interface. Le module Contrats historique reste inchangé en mode JSON.
 Les champs Contrat des comptes ne deviennent pas une nouvelle règle d'accès.
+
+La commande `prepare` crée les tables et vérifie la migration dans une copie
+temporaire, sans appliquer les données à la cible. Son rapport inventorie
+les tables et sources, leurs empreintes et les comptes de simulation. Les
+communes homonymes sont conservées séparément par code INSEE, et la migration
+ne réécrit pas les libellés des contrats existants.
 
 La fusion et le déploiement ne sont pas autorisés par ce document.

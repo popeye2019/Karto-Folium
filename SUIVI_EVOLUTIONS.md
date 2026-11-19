@@ -1,5 +1,24 @@
 # Suivi des évolutions Karto-Folium
 
+## 19 novembre 2026 — Préparation concrète des tables et de la migration
+
+- Vérification avant synchronisation : branche locale et GitHub au même commit
+  `e5c0815`, `main` toujours au commit `b42aaf1`. Travail poursuivi sur la branche
+  séparée `codex/architecture-sqlite-metier` de la Pull Request nº 2.
+- Création de la base locale ignorée par Git `instance/catalogue.sqlite3`,
+  contenant les six tables du catalogue, sans données fictives ou réelles.
+- Ajout de `prepare` : création des tables et simulation de migration sur une
+  copie temporaire avec rapport JSON, empreintes des sources et comptes.
+- Rapport local `instance/rapport-preparation.json` : tables prêtes, aucune
+  donnée importée, migration des données non vérifiable car les sources
+  métier sont absentes de `app/data/sites`.
+- Correction de la reconstruction des communes homonymes depuis les sites et
+  refus des codes INSEE associés à des noms contradictoires. Préservation des
+  libellés de contrats existants lors d'un nouvel import de migration.
+- 154 tests réussis, dont 10 nouveaux tests de préparation et de reprise.
+- Reste à fournir : emplacement des JSON réels et rattachements aux contrats
+  lorsque ceux-ci ne sont pas renseignés. Aucun déploiement ni activation SQL.
+
 ## 19 novembre 2026 — Catalogue SQLite
 
 - Demande : migrer le catalogue avec imports JSON/CSV ; règle confirmée :

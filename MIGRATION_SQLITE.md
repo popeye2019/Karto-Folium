@@ -11,6 +11,26 @@ Depuis la racine du dépôt, choisir une nouvelle base et un dossier contenant
 une copie des fichiers JSON de sites. Les chemins ci-dessous sont des exemples.
 Ne pas copier la base ni les données métier dans Git.
 
+Pour créer les tables et vérifier la migration sans importer les données dans
+la base cible, utiliser d'abord la commande de préparation :
+
+```powershell
+python scripts/catalogue_sqlite.py --database instance/catalogue.sqlite3 prepare --data-dir chemin/vers/copie/sites --report instance/rapport-preparation.json
+```
+
+Elle crée une base vide si nécessaire, puis effectue la simulation sur une
+copie temporaire. Une base cible existante reste intacte. Le rapport indique
+les six tables, leur version de schéma, les comptes actuels, les empreintes
+SHA-256 des sources présentes, les comptes après simulation et les erreurs.
+Le code retour vaut 0 si la migration a été vérifiée, 2 si les tables sont
+prêtes mais les sources absentes ou invalides, et 1 en cas d'erreur technique
+ou d'arguments incompatibles. `donnees_importees` reste faux pendant cette
+préparation. Le rapport ne peut pas remplacer la base ni les fichiers sources.
+
+Sans `--data-dir`, la préparation cherche les sources dans `app/data/sites`.
+Un contrat initial peut être fourni par `--contrat`, selon la règle expliquée
+ci-dessous. Les étapes séparées restent disponibles :
+
 ```powershell
 python scripts/catalogue_sqlite.py --database instance/catalogue.sqlite3 init
 python scripts/catalogue_sqlite.py --database instance/catalogue.sqlite3 migrate --data-dir chemin/vers/copie/sites --contrat REF-CONTRAT --dry-run
@@ -30,6 +50,11 @@ Les communes ou types absents des référentiels sont récupérés depuis les no
 des sites. Aucun code géographique n'est inventé. Si une commune existe sans
 code alors que le site fournit un CODE_INSEE, enrichir explicitement le
 référentiel pour éviter un rapprochement ambigu.
+
+Deux communes de même nom avec des codes INSEE distincts restent distinctes,
+y compris si elles sont reconstruites depuis les seuls sites. Un même code
+associé à des noms contradictoires bloque la migration. Les libellés des
+contrats déjà enregistrés sont conservés lors d'une nouvelle migration.
 
 Corriger les erreurs signalées et relancer la simulation. La première erreur
 arrête le lot. Un ancien INDEX non entier, un doublon, un nom obligatoire absent
