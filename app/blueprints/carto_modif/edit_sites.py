@@ -22,6 +22,7 @@ from app.utils.utils_json import (
     save_json_file as save_data,
 )
 from app.utils.auth import login_required, require_level
+from app.utils.coordinates import map_center, parse_coordinate
 
 DATA_FILE = "./app/data/sites/recap.json"
 TYPE_FILE = "./app/data/sites/type_site.json"
@@ -159,11 +160,17 @@ def edit_record(record_index: int):
 
     if request.method == "POST":
         selected_type = (request.form.get("TYPE") or record_data.get("TYPE", "")).strip()
+        record = dict(record_data)
+        for field in record:
+            if field != "INDEX":
+                record[field] = request.form.get(field, record[field])
+        errors = _coordinate_errors(record.get("LAT"), record.get("LONG"))
         if site_types and selected_type not in site_types:
-            flash("TYPE hors liste.", "danger")
-            latitude_default = float(str(record_data.get("LAT", "")).strip() or 46.5)
-            longitude_default = float(str(record_data.get("LONG", "")).strip() or 2.5)
-            record = dict(record_data)
+            errors.append("TYPE hors liste.")
+        if errors:
+            for message in errors:
+                flash(message, "danger")
+            latitude_default, longitude_default = map_center(record.get("LAT"), record.get("LONG"))
             record["TYPE"] = selected_type or record_data.get("TYPE", "")
             return render_template(
                 "edit_record.html",
@@ -201,8 +208,7 @@ def edit_record(record_index: int):
         flash("Enregistrement mis a jour avec succes.", "success")
         return redirect(url_for("edit_sites.list_records"))
 
-    latitude_default = float(str(record_data.get("LAT", "")).strip() or 46.5)
-    longitude_default = float(str(record_data.get("LONG", "")).strip() or 2.5)
+    latitude_default, longitude_default = map_center(record_data.get("LAT"), record_data.get("LONG"))
 
     record = dict(record_data)
     if not record.get("ETAT"):
@@ -260,7 +266,8 @@ def add_record():
             for message in errors:
                 flash(message, "danger")
 
-            record = {
+            record = dict(request.form)
+            record.update({
                 "INDEX": str(next_index),
                 "COMMUNE": commune,
                 "NOM": name,
@@ -268,15 +275,16 @@ def add_record():
                 "LAT": latitude_raw,
                 "LONG": longitude_raw,
                 "ETAT": _normalize_state(etat_raw, site_states),
-            }
+            })
+            latitude_default, longitude_default = map_center(latitude_raw, longitude_raw)
             return render_template(
                 "add_record.html",
                 record=record,
                 communes=communes,
                 site_types=site_types,
                 site_states=site_states,
-                lat0=float(latitude_raw) if latitude_raw else 46.5,
-                lon0=float(longitude_raw) if longitude_raw else 2.5,
+                lat0=latitude_default,
+                lon0=longitude_default,
             )
 
         latitude = float(latitude_raw)
@@ -340,6 +348,17 @@ def regenerate_map():
 
 
 
+def _coordinate_errors(latitude: object, longitude: object) -> list[str]:
+    """Return actionable messages for each invalid coordinate."""
+    errors = []
+    for label, value, limit in (("LAT", latitude, 90), ("LONG", longitude, 180)):
+        try:
+            parse_coordinate(value, limit)
+        except ValueError:
+            errors.append(f"{label} doit être un nombre compris entre -{limit} et {limit}.")
+    return errors
+
+
 def _validate_request(
     commune: str,
     name: str,
@@ -367,11 +386,7 @@ def _validate_request(
     elif site_types and site_type not in site_types:
         errors.append("TYPE hors liste.")
 
-    try:
-        float(latitude_raw)
-        float(longitude_raw)
-    except ValueError:
-        errors.append("LAT/LONG obligatoires via la carte.")
+    errors.extend(_coordinate_errors(latitude_raw, longitude_raw))
 
     if etat_raw and etat_raw.upper() not in {state.upper() for state in site_states}:
         errors.append("ETAT hors liste.")
